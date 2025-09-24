@@ -1,0 +1,88 @@
+body {
+    background-color: #C5D1E9;
+    font-family: 'InterMedium';
+    font-style: inter;
+    margin: 0px;
+}
+
+.mainBlock {
+    /* padding: 20px; */
+    margin-top: 142px;
+    margin-left: 300px;
+    margin-right: 300px;
+    margin-bottom: 139px;
+}
+
+input {
+    width: 424px;
+    height: 60px;
+    background-color: #ffffff80;
+    /* border: ; */
+    border-radius: 30px;
+    border-color: #ffffff;
+    font-family: 'InterRegular';
+    font-size: 24px;
+    padding-left: 43px;
+    
+}
+.IDemployee .placeholder {
+    color: aqua;
+    /* color: #6B798A; */
+}
+
+/*---------------- FOOTER ---------------- */
+
+footer {
+    background-color: #FFFFFF80;
+}
+
+.footerBlock {
+    /* padding: 20px; */
+    margin-top: 142px;
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-bottom: 139px;
+    text-align: justify;
+    /* justify-content: end; */
+}
+
+/*---------------- TEXT ---------------- */
+
+h1 {
+    font-size: 48px;
+    color: #303F52;
+    font-weight: 200;
+    padding-bottom: 87px;
+    margin: 0px;
+}
+
+h2 {
+    font-size: 40px;
+    color: #303F52;
+    font-weight: 200;
+    margin: 0px;
+    padding: 32px 0px 32px 0px;
+}
+
+p {
+    font-size: 25px;
+    color: #313131;
+    font-family: 'InterRegular';
+    padding-bottom: 105px;
+    margin: 0px;
+}
+
+@font-face {
+    font-family: 'InterMedium';
+    src: url('fonts/Inter-Medium.otf') format('opentype');
+    font-weight: 500;
+    /* font-style: normal; */
+    font-display: swap;
+}
+@font-face {
+    font-family: 'InterRegular';
+    src: url('fonts/Inter-Regular.otf') format('opentype');
+    font-weight: 100;
+    /* font-style: normal; */
+    font-display: swap;
+}
