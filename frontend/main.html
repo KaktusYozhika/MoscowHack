@@ -24,6 +24,40 @@
         <h1>Инструменты на фото онлайн</h1>
         
         <input class="IDemployee" type="text" placeholder="Табельный номер">
+
+        <label class="switch">
+            <input type="checkbox" class="switch-input">
+            <div class="switch-label">
+                <div class="switch-slider"></div>
+                <div class="switch-option">Выдача</div>
+                <div class="switch-option">Сдача</div>
+            </div>
+        </label>
+
+
+
+
+        <div class="pictureConteiner">
+            <div class="uploadContainer">
+                <img id="uploadedImage" alt="Загрузите фотографию">
+                <input type="file" class="upload-input" accept="image/*" onchange="previewImage(event)">
+            </div>
+            <button id="insertButton">Вставить</button>
+            <button id="downloadButton">Загрузить</button>
+        </div>
+
+
+
+        <div class="slider-container">
+            <div>Распознование:</div>
+            <div class="slider-value" id="sliderValue">50</div>
+            <div>%</div>
+            <input type="range" id="valueSlider" class="slider" min="0" max="100" value="50">
+        </div>
+
+        <button id="checkButton">Проверить</button>
+        
+
     </main>
     
     <footer>

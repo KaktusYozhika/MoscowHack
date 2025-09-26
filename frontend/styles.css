@@ -1,7 +1,6 @@
 body {
     background-color: #C5D1E9;
     font-family: 'InterMedium';
-    font-style: inter;
     margin: 0px;
 }
 
@@ -13,21 +12,196 @@ body {
     margin-bottom: 139px;
 }
 
-input {
-    width: 424px;
+.IDemployee {
+    width: 467px;
     height: 60px;
     background-color: #ffffff80;
-    /* border: ; */
+    border: 1px solid #ccc;
     border-radius: 30px;
-    border-color: #ffffff;
+    box-sizing: border-box;
+    padding-left: 43px;
+    margin: 18.5px 0 18.5px 0;
     font-family: 'InterRegular';
     font-size: 24px;
-    padding-left: 43px;
-    
 }
-.IDemployee .placeholder {
-    color: aqua;
-    /* color: #6B798A; */
+
+.IDemployee::placeholder {
+    color: #6B798A;
+}
+
+
+
+
+
+
+.switch-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-label {
+    position: relative;
+    display: flex;
+    background-color: #ffffff80;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 467px;
+    height: 60px;
+}
+
+.switch-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: color 0.3s ease;
+    font-weight: 500;
+    font-size: 24px;
+    color: #303F52;
+}
+
+.switch-slider {
+    position: absolute;
+    height: 100%;
+    background-color: white;
+    border-radius: 30px;
+    transition: transform 0.3s ease;
+    width: 50%;
+}
+
+.switch-input:checked + .switch-label .switch-slider {
+    transform: translateX(100%);
+}
+
+
+
+
+
+.pictureConteiner {
+    width: 466px;
+    height: 277px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 37px 0 37px 0;
+
+}
+
+.uploadContainer {
+    width: 466px;
+    height: 211px;
+    background-color: #ffffff80;
+    border: 1px solid #ffffff9d;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.upload-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* Скрываем изображение по умолчанию */
+}
+.upload-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Делаем input невидимым */
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+.slider-container {
+    width: 466px; /* Ширина ползунка */
+    height: 73px;
+    padding-top: 18.5px;
+    margin-bottom:37px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-between;
+    font-size: 24px;
+    color: #303F52;
+}
+
+.slider {
+    -webkit-appearance: none; /* Убираем стандартный стиль для WebKit */
+    width: 467px; /* Ширина ползунка */
+    height: 5px; /* Высота полосы */
+    background: #ffffff80; /* Цвет полосы */
+    border-radius: 30px; /* Скругление углов */
+    outline: none; /* Убираем обводку */
+    transition: opacity 0.2s; /* Плавный переход */
+}
+
+.slider:hover {
+    opacity: 1; /* Полная непрозрачность при наведении */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Убираем стандартный стиль для WebKit */
+    appearance: none; /* Убираем стандартный стиль */
+    width: 9px; /* Ширина ползунка */
+    height: 39.45px; /* Высота ползунка */
+    border-radius: 30px; /* Скругление для создания круга */
+    background: #ffffff; /* Цвет ползунка */
+    cursor: pointer; /* Курсор при наведении */
+}
+
+
+
+.slider-value {
+    padding-top: 3px;
+    padding-left: 27px; /* Размер шрифта */
+}
+
+
+
+button {
+    /* opacity: 0.7; */
+    padding: 15px 32px; /* Отступы */
+    text-align: center; /* Выравнивание текста */
+    text-decoration: none; /* Без подчеркивания */
+    display: inline-block; /* Встраиваемый блок */
+    font-size: 24px; /* Размер шрифта */
+    margin: 18.5px 0 18.5px 0; /* Отступы вокруг кнопки */
+    cursor: pointer; /* Указатель при наведении */
+    border-radius: 30px; /* Закругленные углы */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+#checkButton {
+    border: none; /* Без рамки */
+    background-color: #1751A1;
+    color: white;
+    opacity: 0.7;
+}
+#insertButton {
+    background-color: #ffffff00;
+    border: 1px solid white;
+    color: white;
+}
+#downloadButton {
+    border: none; /* Без рамки */
+    background-color: #ffffff80;
+    color: #303F52
+}
+
+
+.buttonCheck:hover {
+    /* background-color: yellow; */
 }
 
 /*---------------- FOOTER ---------------- */
