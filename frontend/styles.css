@@ -1,0 +1,418 @@
+body {
+    background-color: #C5D1E9;
+    font-family: 'InterMedium';
+    margin: 0px;
+}
+
+.mainBlock {
+    /* padding: 20px; */
+    margin-top: 142px;
+    margin-left: 300px;
+    margin-right: 300px;
+    margin-bottom: 139px;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 колонки равной ширины */
+  grid-template-rows: auto auto; /* 2 строки */
+  row-gap: 87px;
+  column-gap: 123px;
+}
+
+.top {
+  grid-column: 1 / 3; /* занимает обе колонки */
+}
+
+
+/*---------------- TebelID ---------------- */
+
+.TebelID {
+    width: 467px;
+    height: 60px;
+    background-color: #ffffff80;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    box-sizing: border-box;
+    padding-left: 43px;
+    margin-bottom: 37px;
+    font-family: 'InterRegular';
+    font-size: 24px;
+}
+
+.TebelID::placeholder {
+    color: #6B798A;
+}
+
+
+/*---------------- Switch ---------------- */
+
+.switch-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-label {
+    position: relative;
+    display: flex;
+    background-color: #ffffff80;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 467px;
+    height: 60px;
+}
+
+.switch-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: color 0.3s ease;
+    font-weight: 500;
+    font-size: 24px;
+    color: #303F52;
+}
+
+.switch-slider {
+    position: absolute;
+    height: 100%;
+    background-color: white;
+    border-radius: 30px;
+    transition: transform 0.3s ease;
+    width: 50%;
+}
+
+.switch-input:checked + .switch-label .switch-slider {
+    transform: translateX(100%);
+}
+
+
+/*---------------- Picture ---------------- */
+
+.pictureConteiner {
+    width: 466px;
+    height: 277px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 37px 0 37px 0;
+}
+
+.uploadContainer {
+    width: 466px;
+    height: 211px;
+    background-color: #ffffff80;
+    border: 1px solid #ffffff9d;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.upload-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* Скрываем изображение по умолчанию */
+}
+.upload-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Делаем input невидимым */
+    cursor: pointer;
+}
+
+
+
+/*---------------- slider ---------------- */
+
+.slider-container {
+    width: 466px; /* Ширина ползунка */
+    height: 73px;
+    padding-top: 18.5px;
+    margin-bottom:37px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-between;
+    font-size: 24px;
+    color: #303F52;
+}
+
+.slider {
+    -webkit-appearance: none; /* Убираем стандартный стиль для WebKit */
+    width: 467px; /* Ширина ползунка */
+    height: 5px; /* Высота полосы */
+    background: #ffffff80; /* Цвет полосы */
+    border-radius: 30px; /* Скругление углов */
+    outline: none; /* Убираем обводку */
+    transition: opacity 0.2s; /* Плавный переход */
+}
+
+.slider:hover {
+    opacity: 1; /* Полная непрозрачность при наведении */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Убираем стандартный стиль для WebKit */
+    appearance: none; /* Убираем стандартный стиль */
+    width: 9px; /* Ширина ползунка */
+    height: 39.45px; /* Высота ползунка */
+    border-radius: 30px; /* Скругление для создания круга */
+    background: #ffffff; /* Цвет ползунка */
+    cursor: pointer; /* Курсор при наведении */
+}
+
+
+
+.slider-value {
+    padding-top: 3px;
+    padding-left: 27px; /* Размер шрифта */
+}
+
+
+/*---------------- TABLE ---------------- */
+
+.instruments-container {
+    width: 727px; 
+    height: 798px;
+    border: 1px solid #ffffff;
+    border-radius: 30px;
+    background-color: #ffffff80;
+    display: flex;
+    flex-direction: column;
+    font-size: 24px;
+    color: #303F52;
+}
+
+.table-header {
+    height: 83px;
+    background-color: #ffffff80;
+    border: 1px solid #ffffff;
+    border-radius: 30px;
+    padding-left: 50px;
+    align-content: center;
+    /* flex-shrink: 0; */
+}
+
+.table-header p {
+    margin: 0;
+    font-family: 'InterSemiBold';
+    font-size: 24px;
+    color: #303F52;
+}
+
+.table-column-headers {
+    display: flex;
+    /* flex-shrink: 0; */
+}
+
+.table-column-headers .instrument-col{
+    width: 50%;
+    height: 100px;
+    padding-left: 85px;
+    font-family: 'InterMedium'
+}
+
+.table-column-headers .finding-col {
+    width: 50%;
+    height: 100px;
+    padding-right: 39px;
+    font-family: 'InterMedium'
+}
+
+
+.instrument-col {
+    width: 324px;
+    padding-left: 46px;
+    display: flex;
+    align-items: center;
+    /* width: calc(727px * 0.5 - 85px); */
+    /* word-wrap: break-word; */
+}
+
+.finding-col {
+    /* width: calc(727px * 0.5); */
+    width: 324px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* word-wrap: break-word; */
+}
+
+.table-footer {
+    padding: 24px 0px 24px 66px;
+    /* flex-shrink: 0; */
+}
+
+/* Стили для скроллбара */
+.table-content {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(798px - 150px);
+}
+
+.table-row {
+    display: flex;
+    align-items: center;
+    /* min-height: 47px; */
+    height: auto;
+    padding: 11.5px 0 11.5px 0;
+    margin: 0px 39px 11px 39px;
+}
+
+/* Нечетные строки - с границей */
+.table-row:nth-child(odd) {
+    border: 1px solid #eee;
+    border-radius: 30px;
+    background-color: #ffffff80;
+}
+
+.table-row:hover {
+    background-color: #f8f9fa;
+    border-radius: 30px;
+}
+
+.compliance-text {
+    font-weight: bold;
+    color: #333;
+}
+
+.loading {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.table-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-content::-webkit-scrollbar-track {
+    background: #ffffff80;
+    border-radius: 4px;
+}
+
+.table-content::-webkit-scrollbar-thumb {
+    background: #303f52ab;
+    border-radius: 4px;
+}
+
+.table-content::-webkit-scrollbar-thumb:hover {
+    background: #303F52;
+}
+
+.buttonsBelowTable {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 29px;
+}
+
+/*---------------- BUTTONS ---------------- */
+
+button {
+    /* opacity: 0.7; */
+    padding: 15px 32px; /* Отступы */
+    text-align: center; /* Выравнивание текста */
+    text-decoration: none; /* Без подчеркивания */
+    display: inline-block; /* Встраиваемый блок */
+    font-size: 24px; /* Размер шрифта */
+    margin: 18.5px 0 18.5px 0; /* Отступы вокруг кнопки */
+    cursor: pointer; /* Указатель при наведении */
+    border-radius: 30px; /* Закругленные углы */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+#check_save_Button {
+    border: none; /* Без рамки */
+    background-color: #1751A1;
+    color: white;
+    opacity: 0.7;
+}
+#insertButton {
+    background-color: #ffffff00;
+    border: 1px solid white;
+    color: white;
+}
+#downloadButton {
+    border: none; /* Без рамки */
+    background-color: #ffffff80;
+    color: #303F52
+}
+
+
+.buttonCheck:hover {
+    /* background-color: yellow; */
+}
+
+/*---------------- FOOTER ---------------- */
+
+footer {
+    background-color: #FFFFFF80;
+}
+
+.footerBlock {
+    /* padding: 20px; */
+    margin-top: 142px;
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-bottom: 139px;
+    text-align: justify;
+    padding-bottom: 105px;
+    /* justify-content: end; */
+}
+
+/*---------------- TEXT ---------------- */
+
+h1 {
+    font-size: 48px;
+    color: #303F52;
+    font-weight: 200;
+    margin: 0px;
+}
+
+h2 {
+    font-size: 40px;
+    color: #303F52;
+    font-weight: 200;
+    margin: 0px;
+    padding: 32px 0px 32px 0px;
+}
+
+p {
+    font-size: 25px;
+    color: #313131;
+    font-family: 'InterRegular';
+    margin: 0px;
+}
+
+* {
+    font-family: 'InterRegular';
+}
+
+@font-face {
+    font-family: 'InterMedium';
+    src: url('fonts/Inter-Medium.otf') format('opentype');
+    /* font-style: normal; */
+    font-display: swap;
+}
+@font-face {
+    font-family: 'InterRegular';
+    src: url('fonts/Inter-Regular.otf') format('opentype');
+    font-weight: 100;
+    /* font-style: normal; */
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('fonts/Inter-SemiBold.otf') format('opentype');
+    /* font-style: normal; */
+    font-display: swap;
+}
