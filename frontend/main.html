@@ -21,43 +21,78 @@
     </header>
     
     <main class="mainBlock">
-        <h1>Инструменты на фото онлайн</h1>
-        
-        <input class="IDemployee" type="text" placeholder="Табельный номер">
-
-        <label class="switch">
-            <input type="checkbox" class="switch-input">
-            <div class="switch-label">
-                <div class="switch-slider"></div>
-                <div class="switch-option">Выдача</div>
-                <div class="switch-option">Сдача</div>
+        <div class="gridContainer">
+            <div class="cell top">
+                <h1>Инструменты на фото онлайн</h1>
             </div>
-        </label>
+            
+            <div class="cell bottom-left">
+                <input class="TebelID" type="text" placeholder="Табельный номер">
 
+                <!-- Выдача - Сдача -->
+                <label class="switch">
+                    <input type="checkbox" class="switch-input">
+                    <div class="switch-label">
+                        <div class="switch-slider"></div>
+                        <div class="switch-option">Выдача</div>
+                        <div class="switch-option">Сдача</div>
+                    </div>
+                </label>
 
+                <!-- Загрузка картинки -->
+                <div class="pictureConteiner">
+                    <div class="uploadContainer">
+                        <img id="uploadedImage" alt="Загрузите фотографию">
+                        <input type="file" class="upload-input" accept="image/*" onchange="previewImage(event)">
+                    </div>
+                    <button id="insertButton">Вставить</button>
+                    <button id="downloadButton">Загрузить</button>
+                </div>
 
+                <!-- Настройка параметра "Распознование" -->
+                <div class="slider-container">
+                    <div>Распознование:</div>
+                    <div class="slider-value" id="sliderValue">50</div>
+                    <div>%</div>
+                    <input type="range" id="valueSlider" class="slider" min="0" max="100" value="50">
+                </div>
 
-        <div class="pictureConteiner">
-            <div class="uploadContainer">
-                <img id="uploadedImage" alt="Загрузите фотографию">
-                <input type="file" class="upload-input" accept="image/*" onchange="previewImage(event)">
+                <button id="check_save_Button">Проверить</button>
             </div>
-            <button id="insertButton">Вставить</button>
-            <button id="downloadButton">Загрузить</button>
+            
+            <div class="cell bottom-right">
+                <!-- Таблица с инструментами -->
+                <div class="instruments-container">
+                    <!-- Заголовок таблицы -->
+                    <div class="table-header">
+                        <p>Список распознанных инструментов</p>
+                    </div>
+                    
+                    <!-- Заголовки колонок -->
+                    <div class="table-column-headers">
+                        <div class="instrument-col">Инструмент</div>
+                        <div class="finding-col">Нахождение</div>
+                    </div>
+                    
+                    <!-- Контейнер для скроллируемого контента -->
+                    <div class="table-content" id="tableContent">
+                        <div class="loading">Загрузка данных...</div>
+                    </div>
+                    
+                    <!-- Футер таблицы -->
+                    <div class="table-footer">
+                        <div>Соответствие:</div>
+                    </div>
+                </div>
+                
+                <div class="buttonsBelowTable">
+                    <button id="check_save_Button">Сохранить в журнал</button>
+                    <button id="downloadButton">Скачать отчёт</button>
+                </div>
+                
+            </div>
+
         </div>
-
-
-
-        <div class="slider-container">
-            <div>Распознование:</div>
-            <div class="slider-value" id="sliderValue">50</div>
-            <div>%</div>
-            <input type="range" id="valueSlider" class="slider" min="0" max="100" value="50">
-        </div>
-
-        <button id="checkButton">Проверить</button>
-        
-
     </main>
     
     <footer>

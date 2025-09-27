@@ -12,7 +12,22 @@ body {
     margin-bottom: 139px;
 }
 
-.IDemployee {
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 колонки равной ширины */
+  grid-template-rows: auto auto; /* 2 строки */
+  row-gap: 87px;
+  column-gap: 123px;
+}
+
+.top {
+  grid-column: 1 / 3; /* занимает обе колонки */
+}
+
+
+/*---------------- TebelID ---------------- */
+
+.TebelID {
     width: 467px;
     height: 60px;
     background-color: #ffffff80;
@@ -20,19 +35,17 @@ body {
     border-radius: 30px;
     box-sizing: border-box;
     padding-left: 43px;
-    margin: 18.5px 0 18.5px 0;
+    margin-bottom: 37px;
     font-family: 'InterRegular';
     font-size: 24px;
 }
 
-.IDemployee::placeholder {
+.TebelID::placeholder {
     color: #6B798A;
 }
 
 
-
-
-
+/*---------------- Switch ---------------- */
 
 .switch-input {
     opacity: 0;
@@ -76,8 +89,7 @@ body {
 }
 
 
-
-
+/*---------------- Picture ---------------- */
 
 .pictureConteiner {
     width: 466px;
@@ -86,7 +98,6 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 37px 0 37px 0;
-
 }
 
 .uploadContainer {
@@ -117,10 +128,7 @@ body {
 
 
 
-
-
-
-
+/*---------------- slider ---------------- */
 
 .slider-container {
     width: 466px; /* Ширина ползунка */
@@ -168,6 +176,145 @@ body {
 }
 
 
+/*---------------- TABLE ---------------- */
+
+.instruments-container {
+    width: 727px; 
+    height: 798px;
+    border: 1px solid #ffffff;
+    border-radius: 30px;
+    background-color: #ffffff80;
+    display: flex;
+    flex-direction: column;
+    font-size: 24px;
+    color: #303F52;
+}
+
+.table-header {
+    height: 83px;
+    background-color: #ffffff80;
+    border: 1px solid #ffffff;
+    border-radius: 30px;
+    padding-left: 50px;
+    align-content: center;
+    /* flex-shrink: 0; */
+}
+
+.table-header p {
+    margin: 0;
+    font-family: 'InterSemiBold';
+    font-size: 24px;
+    color: #303F52;
+}
+
+.table-column-headers {
+    display: flex;
+    /* flex-shrink: 0; */
+}
+
+.table-column-headers .instrument-col{
+    width: 50%;
+    height: 100px;
+    padding-left: 85px;
+    font-family: 'InterMedium'
+}
+
+.table-column-headers .finding-col {
+    width: 50%;
+    height: 100px;
+    padding-right: 39px;
+    font-family: 'InterMedium'
+}
+
+
+.instrument-col {
+    width: 324px;
+    padding-left: 46px;
+    display: flex;
+    align-items: center;
+    /* width: calc(727px * 0.5 - 85px); */
+    /* word-wrap: break-word; */
+}
+
+.finding-col {
+    /* width: calc(727px * 0.5); */
+    width: 324px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* word-wrap: break-word; */
+}
+
+.table-footer {
+    padding: 24px 0px 24px 66px;
+    /* flex-shrink: 0; */
+}
+
+/* Стили для скроллбара */
+.table-content {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(798px - 150px);
+}
+
+.table-row {
+    display: flex;
+    align-items: center;
+    /* min-height: 47px; */
+    height: auto;
+    padding: 11.5px 0 11.5px 0;
+    margin: 0px 39px 11px 39px;
+}
+
+/* Нечетные строки - с границей */
+.table-row:nth-child(odd) {
+    border: 1px solid #eee;
+    border-radius: 30px;
+    background-color: #ffffff80;
+}
+
+.table-row:hover {
+    background-color: #f8f9fa;
+    border-radius: 30px;
+}
+
+.compliance-text {
+    font-weight: bold;
+    color: #333;
+}
+
+.loading {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.table-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-content::-webkit-scrollbar-track {
+    background: #ffffff80;
+    border-radius: 4px;
+}
+
+.table-content::-webkit-scrollbar-thumb {
+    background: #303f52ab;
+    border-radius: 4px;
+}
+
+.table-content::-webkit-scrollbar-thumb:hover {
+    background: #303F52;
+}
+
+.buttonsBelowTable {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 29px;
+}
+
+/*---------------- BUTTONS ---------------- */
 
 button {
     /* opacity: 0.7; */
@@ -182,7 +329,7 @@ button {
     transition: background-color 0.3s; /* Плавный переход цвета */
 }
 
-#checkButton {
+#check_save_Button {
     border: none; /* Без рамки */
     background-color: #1751A1;
     color: white;
@@ -217,6 +364,7 @@ footer {
     margin-right: 150px;
     margin-bottom: 139px;
     text-align: justify;
+    padding-bottom: 105px;
     /* justify-content: end; */
 }
 
@@ -226,7 +374,6 @@ h1 {
     font-size: 48px;
     color: #303F52;
     font-weight: 200;
-    padding-bottom: 87px;
     margin: 0px;
 }
 
@@ -242,14 +389,16 @@ p {
     font-size: 25px;
     color: #313131;
     font-family: 'InterRegular';
-    padding-bottom: 105px;
     margin: 0px;
+}
+
+* {
+    font-family: 'InterRegular';
 }
 
 @font-face {
     font-family: 'InterMedium';
     src: url('fonts/Inter-Medium.otf') format('opentype');
-    font-weight: 500;
     /* font-style: normal; */
     font-display: swap;
 }
@@ -257,6 +406,13 @@ p {
     font-family: 'InterRegular';
     src: url('fonts/Inter-Regular.otf') format('opentype');
     font-weight: 100;
+    /* font-style: normal; */
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('fonts/Inter-SemiBold.otf') format('opentype');
     /* font-style: normal; */
     font-display: swap;
 }
