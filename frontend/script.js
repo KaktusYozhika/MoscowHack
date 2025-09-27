@@ -1,3 +1,5 @@
+/////////////////////      Выбор функции: Выдача или Сдача       ///////////////////////
+
 const switchInput = document.querySelector('.switch-input');
         
 switchInput.addEventListener('change', function() {
@@ -5,10 +7,7 @@ switchInput.addEventListener('change', function() {
 });
 
 
-
-
-
-
+/////////////////////      Выбор значения распознования       ///////////////////////
 
 const slider = document.getElementById('valueSlider');
 const sliderValue = document.getElementById('sliderValue');
@@ -19,12 +18,7 @@ slider.addEventListener('input', () => {
 });
 
 
-
-
-
-
-
-
+/////////////////////      Изображение       ///////////////////////
 
 function previewImage(event) {
     const file = event.target.files[0];
@@ -42,8 +36,7 @@ function previewImage(event) {
 }
 
 
-
-
+/////////////////////      Заполнение таблицы       ///////////////////////
 
 // // Функция для загрузки данных
 // async function loadInstrumentsData() {
