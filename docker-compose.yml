@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CV_URL=http://cv:8001/predict
+    depends_on:
+      - cv
+
+  cv:
+    build: ./cv
+    ports:
+      - "8001:8001"
