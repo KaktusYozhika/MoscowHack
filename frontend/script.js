@@ -1,9 +1,29 @@
+/////////////////////      Для поля табельного номера       ///////////////////////
+
+const inputElement = document.querySelector('.TebelID');
+
+    inputElement.addEventListener('focus', function() {
+        this.style.color = '#303F52'; // Устанавливаем цвет текста при фокусе
+    });
+
+    inputElement.addEventListener('blur', function() {
+        if (this.value) {
+            this.style.color = '#303F52'; // Устанавливаем цвет текста после ввода
+        }
+    });
+
+
 /////////////////////      Выбор функции: Выдача или Сдача       ///////////////////////
 
-const switchInput = document.querySelector('.switch-input');
-        
+const switchInput = document.querySelector('.switchInput');
+let currentOperationType = 'issue'; // По умолчанию "Выдача"
+
 switchInput.addEventListener('change', function() {
+    currentOperationType = this.checked ? 'return' : 'issue';
     console.log('Выбрано:', this.checked ? 'Сдача' : 'Выдача');
+    
+    // Обновляем таблицу при переключении
+    loadInstrumentsData(currentOperationType);
 });
 
 
@@ -19,6 +39,19 @@ slider.addEventListener('input', () => {
 
 
 /////////////////////      Изображение       ///////////////////////
+
+const downloadButton = document.getElementById('downloadButton');
+const uploadInput = document.getElementById('uploadInput');
+
+// Обработчик для кнопки "Вставить"
+downloadButton.addEventListener('click', function() {
+    uploadInput.click(); // Программно кликаем на скрытый input
+});
+
+// Обработчик для выбора файла
+uploadInput.addEventListener('change', function(event) {
+    previewImage(event);
+});
 
 function previewImage(event) {
     const file = event.target.files[0];
@@ -38,111 +71,227 @@ function previewImage(event) {
 
 /////////////////////      Заполнение таблицы       ///////////////////////
 
-// // Функция для загрузки данных
+async function loadInstrumentsData(operationType = 'issue') {
+    const tableContent = document.getElementById('tableContent');
+    const tabelID = document.querySelector('.TebelID').value;
+    
+    // Если табельный номер не введен, показываем пустую таблицу
+    if (!tabelID) {
+        tableContent.innerHTML = '<div class="loading">Введите табельный номер</div>';
+        return;
+    }
+    
+    try {
+        tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
+        
+        // Загружаем данные в зависимости от типа операции
+        let endpoint;
+        if (operationType === 'issue') {
+            endpoint = 'http://localhost:8000/api/issues';
+        } else {
+            endpoint = 'http://localhost:8000/api/returns';
+        }
+        
+        const response = await fetch(endpoint);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        tableContent.innerHTML = '';
+        
+        if (data.length === 0) {
+            tableContent.innerHTML = '<div class="loading">Нет данных для отображения</div>';
+            return;
+        }
+        
+        // Фильтруем данные по введенному табельному номеру
+        const filteredData = data.filter(item => item.TabelID == tabelID);
+        
+        if (filteredData.length === 0) {
+            tableContent.innerHTML = '<div class="loading">Нет данных для табельного номера ' + tabelID + '</div>';
+            return;
+        }
+        
+        // Берем последнюю запись для этого табельного номера
+        const latestRecord = filteredData[filteredData.length - 1];
+        
+        // Создаем массив инструментов на основе данных из БД
+        const instrumentsList = [];
+        
+        if (latestRecord.screwdriver_minus > 0) instrumentsList.push({ instrument: "Отвертка «-»", finding: "95" });
+        if (latestRecord.screwdriver_plus > 0) instrumentsList.push({ instrument: "Отвертка «+»", finding: "96" });
+        if (latestRecord.screwdriver_on_the_offset_cross > 0) instrumentsList.push({ instrument: "Отвертка на смещенный крест", finding: "94" });
+        if (latestRecord.whirlpool > 0) instrumentsList.push({ instrument: "Коловорот", finding: "97" });
+        if (latestRecord.contouring_pliers > 0) instrumentsList.push({ instrument: "Пассатижи контровочные", finding: "98" });
+        if (latestRecord.pliers > 0) instrumentsList.push({ instrument: "Пассатижи", finding: "99" });
+        if (latestRecord.sharnitsa > 0) instrumentsList.push({ instrument: "Шарница", finding: "93" });
+        if (latestRecord.adjustable_wrench > 0) instrumentsList.push({ instrument: "Разводной ключ", finding: "96" });
+        if (latestRecord.oil_can_opener > 0) instrumentsList.push({ instrument: "Открывашка для банок с маслом", finding: "95" });
+        if (latestRecord.horn_wrench_union > 0) instrumentsList.push({ instrument: "Ключ рожковый/накидной ¾", finding: "97" });
+        if (latestRecord.side_cutters > 0) instrumentsList.push({ instrument: "Бокорезы", finding: "98" });
+        
+        if (instrumentsList.length === 0) {
+            tableContent.innerHTML = '<div class="loading">Не распознано ни одного инструмента</div>';
+            return;
+        }
+        
+        // Отображаем инструменты в формате как в mockData
+        instrumentsList.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'tableRow';
+            row.innerHTML = `
+                <div class="instrumentCol">${item.instrument}</div>
+                <div class="findingCol">${item.finding}</div>
+            `;
+            tableContent.appendChild(row);
+        });
+        
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        tableContent.innerHTML = '<div class="loading">Ошибка загрузки данных</div>';
+    }
+}
+
+// Убираем автоматическую загрузку при старте и добавляем обработчики
+document.addEventListener('DOMContentLoaded', function() {
+    const checkButton = document.getElementById('check_save_Button');
+    const tabelInput = document.querySelector('.TebelID');
+    
+    // Загружаем данные только при нажатии кнопки "Проверить"
+    if (checkButton) {
+        checkButton.addEventListener('click', function() {
+            const tabelID = tabelInput.value;
+            if (!tabelID) {
+                alert('Пожалуйста, введите табельный номер');
+                return;
+            }
+            submitToolData(); // Эта функция вызовет loadInstrumentsData после успешной обработки
+        });
+    }
+    
+    // Показываем начальное сообщение вместо загрузки всех данных
+    const tableContent = document.getElementById('tableContent');
+    tableContent.innerHTML = '<div class="loading">Введите табельный номер и нажмите "Проверить"</div>';
+});
+
+
+
+
+// // Если API еще не готово, можно использовать тестовые данные
 // async function loadInstrumentsData() {
 //     const tableContent = document.getElementById('tableContent');
     
-//     try {
-//         // Показываем индикатор загрузки
-//         tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
-        
-//         // Запрос к API или серверу
-//         const response = await fetch('/api/instruments'); // Замените на ваш endpoint
-//         const data = await response.json();
-        
-//         // Очищаем контейнер
-//         tableContent.innerHTML = '';
-        
-//         // Заполняем таблицу данными
-//         if (data.length === 0) {
-//             tableContent.innerHTML = '<div class="loading">Нет данных для отображения</div>';
-//             return;
-//         }
-        
-//         data.forEach(item => {
-//             const row = document.createElement('div');
-//             row.className = 'table-row';
-//             row.innerHTML = `
-//                 <div class="instrument-col">${escapeHtml(item.instrument)}</div>
-//                 <div class="finding-col">${escapeHtml(item.finding)}</div>
-//             `;
-//             tableContent.appendChild(row);
-//         });
-        
-//     } catch (error) {
-//         console.error('Ошибка загрузки данных:', error);
-//         tableContent.innerHTML = '<div class="loading">Ошибка загрузки данных</div>';
-//     }
+//     // Имитация задержки загрузки
+//     tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
+    
+//     // Имитируем задержку сети (можно убрать, если не нужно)
+//     await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // // Тестовые данные
+    // const mockData = [
+    //     { instrument: "Молоток", finding: "96" },
+    //     { instrument: "Отвертка", finding: "98" },
+    //     { instrument: "Отвертка на смещенный крест", finding: "98" },
+    //     { instrument: "Плоскогубцы", finding: "99" },
+    //     { instrument: "Ключ рожковый/накидной  ¾ ", finding: "98.7" },
+    //     { instrument: "Открывашка для банок с маслом", finding: "97" },
+    //     { instrument: "Рубанок", finding: "97.4" },
+    //     { instrument: "Стамеска", finding: "98.9" },
+    //     { instrument: "Отвертка на смещенный крест", finding: "96" },
+    //     { instrument: "Отвертка", finding: "98" },
+    //     { instrument: "Гаечный ключ", finding: "98" },
+    //     { instrument: "Плоскогубцы", finding: "99" },
+    //     { instrument: "Ключ рожковый/накидной  ¾ ", finding: "98.7" },
+    //     { instrument: "Открывашка для банок с маслом", finding: "97" },
+    //     { instrument: "Рубанок", finding: "97.4" },
+    //     { instrument: "Стамеска", finding: "98.9" },
+    //     // ... больше данных
+    // ];
+    
+    // tableContent.innerHTML = '';
+    
+    // mockData.forEach(item => {
+    //     const row = document.createElement('div');
+    //     row.className = 'tableRow';
+    //     row.innerHTML = `
+    //         <div class="instrumentCol">${item.instrument}</div>
+    //         <div class="findingCol">${item.finding}</div>
+    //     `;
+    //     tableContent.appendChild(row);
+    // });
 // }
 
-// // Функция для экранирования HTML (защита от XSS)
-// function escapeHtml(unsafe) {
-//     return unsafe
-//         .replace(/&/g, "&amp;")
-//         .replace(/</g, "&lt;")
-//         .replace(/>/g, "&gt;")
-//         .replace(/"/g, "&quot;")
-//         .replace(/'/g, "&#039;");
-// }
-
-// // Загружаем данные при загрузке страницы
-// document.addEventListener('DOMContentLoaded', loadInstrumentsData);
-
-// // Опционально: обновление данных по кнопке или таймеру
-// function refreshData() {
-//     loadInstrumentsData();
-// }
-
-// // Пример: обновление каждые 30 секунд
-// // setInterval(loadInstrumentsData, 30000);
+// // ВАЖНО: вызвать функцию после объявления
+// loadInstrumentsData();
 
 
+/////////////////////      Отправка данных на сервер       ///////////////////////
 
-
-
-// Если API еще не готово, можно использовать тестовые данные
-async function loadInstrumentsData() {
-    const tableContent = document.getElementById('tableContent');
+async function submitToolData() {
+    const tabelID = document.querySelector('.TebelID').value;
+    const operationType = switchInput.checked ? 'return' : 'issue';
+    const recognitionThreshold = slider.value;
+    const imageFile = document.querySelector('.uploadInput').files[0];
     
-    // Имитация задержки загрузки
-    tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
+    if (!tabelID) {
+        alert('Пожалуйста, введите табельный номер');
+        return;
+    }
     
-    // Имитируем задержку сети (можно убрать, если не нужно)
-    await new Promise(resolve => setTimeout(resolve, 500));
+    if (!imageFile) {
+        alert('Пожалуйста, загрузите изображение');
+        return;
+    }
     
-    // Тестовые данные
-    const mockData = [
-        { instrument: "Молоток", finding: "96" },
-        { instrument: "Отвертка", finding: "98" },
-        { instrument: "Отвертка на смещенный крест", finding: "98" },
-        { instrument: "Плоскогубцы", finding: "99" },
-        { instrument: "Ключ рожковый/накидной  ¾ ", finding: "98.7" },
-        { instrument: "Открывашка для банок с маслом", finding: "97" },
-        { instrument: "Рубанок", finding: "97.4" },
-        { instrument: "Стамеска", finding: "98.9" },
-        { instrument: "Отвертка на смещенный крест", finding: "96" },
-        { instrument: "Отвертка", finding: "98" },
-        { instrument: "Гаечный ключ", finding: "98" },
-        { instrument: "Плоскогубцы", finding: "99" },
-        { instrument: "Ключ рожковый/накидной  ¾ ", finding: "98.7" },
-        { instrument: "Открывашка для банок с маслом", finding: "97" },
-        { instrument: "Рубанок", finding: "97.4" },
-        { instrument: "Стамеска", finding: "98.9" },
-        // ... больше данных
-    ];
+    const formData = new FormData();
+    formData.append('operation_type', operationType);
+    formData.append('tabel_id', tabelID);
+    formData.append('recognition_threshold', recognitionThreshold);
+    formData.append('image', imageFile);
     
-    tableContent.innerHTML = '';
-    
-    mockData.forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'table-row';
-        row.innerHTML = `
-            <div class="instrument-col">${item.instrument}</div>
-            <div class="finding-col">${item.finding}</div>
-        `;
-        tableContent.appendChild(row);
-    });
+    try {
+        const response = await fetch('http://localhost:8000/api/process-tools', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Успешно:', result);
+            
+            // Обновляем таблицу после успешной операции
+            loadInstrumentsData(operationType);
+        } else {
+            const error = await response.json();
+            console.error('Ошибка:', error);
+            alert('Произошлаs ошибка: ' + (error.detail || error.message));
+        }
+    } catch (error) {
+        console.error('Ошибка сети:', error);
+        alert('Ошибка сети: ' + error.message);
+    }
 }
 
-// ВАЖНО: вызвать функцию после объявления
-loadInstrumentsData();
+// Функция для экранирования HTML
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// Назначаем обработчик на кнопку "Проверить"
+document.addEventListener('DOMContentLoaded', function() {
+    const checkButton = document.getElementById('check_save_Button');
+    if (checkButton) {
+        checkButton.addEventListener('click', submitToolData);
+    }
+    
+    // Загружаем данные при загрузке страницы (по умолчанию "Выдача")
+    loadInstrumentsData('issue');
+});
