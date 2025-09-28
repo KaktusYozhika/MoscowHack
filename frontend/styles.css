@@ -22,6 +22,22 @@ body {
 
 .top {
   grid-column: 1 / 3; /* занимает обе колонки */
+  grid-row: 1;
+}
+
+.bottom-left {
+  grid-column: 1; /* первая колонка */
+  grid-row: 2; /* вторая строка */
+}
+
+.bottom-right {
+  grid-column: 2; /* вторая колонка */
+  grid-row: 2; /* вторая строка */
+}
+
+.footer-cell {
+  grid-column: 1 / 3; /* занимает обе колонки */
+  grid-row: 3; /* третья строка */
 }
 
 
@@ -30,8 +46,8 @@ body {
 .TebelID {
     width: 467px;
     height: 60px;
-    background-color: #ffffff80;
-    border: 1px solid #ccc;
+    background-color: #E2E9F4;
+    border: 1px solid #F1F4FA;
     border-radius: 30px;
     box-sizing: border-box;
     padding-left: 43px;
@@ -44,26 +60,37 @@ body {
     color: #6B798A;
 }
 
+.TebelID:hover {
+    color: #303F52;
+}
+
+.TebelID:focus {
+    border: 2px solid;
+    border-color: #6B798A;
+    outline: none;
+}
+
 
 /*---------------- Switch ---------------- */
 
-.switch-input {
+.switchInput {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.switch-label {
+.switchLabel {
     position: relative;
     display: flex;
-    background-color: #ffffff80;
+    background-color: #E2E9F4;
+    border: 1px solid #F1F4FA;
     border-radius: 30px;
     cursor: pointer;
     width: 467px;
     height: 60px;
 }
 
-.switch-option {
+.switchOption {
     flex: 1;
     display: flex;
     align-items: center;
@@ -75,7 +102,7 @@ body {
     color: #303F52;
 }
 
-.switch-slider {
+.switchSlider {
     position: absolute;
     height: 100%;
     background-color: white;
@@ -84,7 +111,7 @@ body {
     width: 50%;
 }
 
-.switch-input:checked + .switch-label .switch-slider {
+.switchInput:checked + .switchLabel .switchSlider {
     transform: translateX(100%);
 }
 
@@ -103,8 +130,8 @@ body {
 .uploadContainer {
     width: 466px;
     height: 211px;
-    background-color: #ffffff80;
-    border: 1px solid #ffffff9d;
+    background-color: #E2E9F4;
+    border: 1px solid #F1F4FA;
     border-radius: 30px;
     display: flex;
     align-items: center;
@@ -112,13 +139,13 @@ body {
     position: relative;
     overflow: hidden;
 }
-.upload-container img {
+.uploadContainer img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: none; /* Скрываем изображение по умолчанию */
 }
-.upload-input {
+.uploadInput {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -130,7 +157,7 @@ body {
 
 /*---------------- slider ---------------- */
 
-.slider-container {
+.sliderContainer {
     width: 466px; /* Ширина ползунка */
     height: 73px;
     padding-top: 18.5px;
@@ -148,7 +175,7 @@ body {
     -webkit-appearance: none; /* Убираем стандартный стиль для WebKit */
     width: 467px; /* Ширина ползунка */
     height: 5px; /* Высота полосы */
-    background: #ffffff80; /* Цвет полосы */
+    background: #E2E9F4; /* Цвет полосы */
     border-radius: 30px; /* Скругление углов */
     outline: none; /* Убираем обводку */
     transition: opacity 0.2s; /* Плавный переход */
@@ -170,7 +197,7 @@ body {
 
 
 
-.slider-value {
+.sliderValue {
     padding-top: 3px;
     padding-left: 27px; /* Размер шрифта */
 }
@@ -178,48 +205,48 @@ body {
 
 /*---------------- TABLE ---------------- */
 
-.instruments-container {
+.instrumentsContainer {
     width: 727px; 
     height: 798px;
-    border: 1px solid #ffffff;
+    border: 1px solid #F1F4FA;
     border-radius: 30px;
-    background-color: #ffffff80;
+    background-color: #E2E9F4;
     display: flex;
     flex-direction: column;
     font-size: 24px;
     color: #303F52;
 }
 
-.table-header {
+.tableHeader {
     height: 83px;
-    background-color: #ffffff80;
-    border: 1px solid #ffffff;
+    background-color: #EFF3F9;
+    border: 1px solid #F1F4FA;
     border-radius: 30px;
     padding-left: 50px;
     align-content: center;
     /* flex-shrink: 0; */
 }
 
-.table-header p {
+.tableHeader p {
     margin: 0;
     font-family: 'InterSemiBold';
     font-size: 24px;
     color: #303F52;
 }
 
-.table-column-headers {
+.tableColumnHeaders {
     display: flex;
     /* flex-shrink: 0; */
 }
 
-.table-column-headers .instrument-col{
+.tableColumnHeaders .instrumentCol{
     width: 50%;
     height: 100px;
     padding-left: 85px;
     font-family: 'InterMedium'
 }
 
-.table-column-headers .finding-col {
+.tableColumnHeaders .findingCol {
     width: 50%;
     height: 100px;
     padding-right: 39px;
@@ -227,7 +254,7 @@ body {
 }
 
 
-.instrument-col {
+.instrumentCol {
     width: 324px;
     padding-left: 46px;
     display: flex;
@@ -236,7 +263,7 @@ body {
     /* word-wrap: break-word; */
 }
 
-.finding-col {
+.findingCol {
     /* width: calc(727px * 0.5); */
     width: 324px;
     display: flex;
@@ -245,19 +272,19 @@ body {
     /* word-wrap: break-word; */
 }
 
-.table-footer {
+.tableFooter {
     padding: 24px 0px 24px 66px;
     /* flex-shrink: 0; */
 }
 
 /* Стили для скроллбара */
-.table-content {
+.tableContent {
     flex: 1;
     overflow-y: auto;
     max-height: calc(798px - 150px);
 }
 
-.table-row {
+.tableRow {
     display: flex;
     align-items: center;
     /* min-height: 47px; */
@@ -267,18 +294,18 @@ body {
 }
 
 /* Нечетные строки - с границей */
-.table-row:nth-child(odd) {
-    border: 1px solid #eee;
+.tableRow:nth-child(odd) {
+    border: 1px solid #F1F4FA;
     border-radius: 30px;
-    background-color: #ffffff80;
+    background-color: #EFF3F9;
 }
 
-.table-row:hover {
+.tableRow:hover {
     background-color: #f8f9fa;
     border-radius: 30px;
 }
 
-.compliance-text {
+.complianceText {
     font-weight: bold;
     color: #333;
 }
@@ -290,21 +317,21 @@ body {
     font-style: italic;
 }
 
-.table-content::-webkit-scrollbar {
+.tableContent::-webkit-scrollbar {
     width: 8px;
 }
 
-.table-content::-webkit-scrollbar-track {
-    background: #ffffff80;
+.tableContent::-webkit-scrollbar-track {
+    background: #E2E9F4;
     border-radius: 4px;
 }
 
-.table-content::-webkit-scrollbar-thumb {
+.tableContent::-webkit-scrollbar-thumb {
     background: #303f52ab;
     border-radius: 4px;
 }
 
-.table-content::-webkit-scrollbar-thumb:hover {
+.tableContent::-webkit-scrollbar-thumb:hover {
     background: #303F52;
 }
 
@@ -330,22 +357,21 @@ button {
 }
 
 #check_save_Button {
-    border: none; /* Без рамки */
+    border: none;
     background-color: #1751A1;
     color: white;
     opacity: 0.7;
 }
 #insertButton {
     background-color: #ffffff00;
-    border: 1px solid white;
+    border: 1px solid #F1F4FA;
     color: white;
 }
 #downloadButton {
-    border: none; /* Без рамки */
-    background-color: #ffffff80;
+    border: 1px solid #F1F4FA;
+    background-color: #E2E9F4;
     color: #303F52
 }
-
 
 .buttonCheck:hover {
     /* background-color: yellow; */
@@ -354,7 +380,7 @@ button {
 /*---------------- FOOTER ---------------- */
 
 footer {
-    background-color: #FFFFFF80;
+    background-color: #E2E9F4;
 }
 
 .footerBlock {

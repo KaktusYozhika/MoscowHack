@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Название вашего сайта</title>
+    <title>Инструменты на фото онлайн</title>
     <meta name="description" content="Краткое описание страницы">
     
     <!-- Подключение CSS -->
@@ -31,11 +31,11 @@
 
                 <!-- Выдача - Сдача -->
                 <label class="switch">
-                    <input type="checkbox" class="switch-input">
-                    <div class="switch-label">
-                        <div class="switch-slider"></div>
-                        <div class="switch-option">Выдача</div>
-                        <div class="switch-option">Сдача</div>
+                    <input type="checkbox" class="switchInput">
+                    <div class="switchLabel">
+                        <div class="switchSlider"></div>
+                        <div class="switchOption">Выдача</div>
+                        <div class="switchOption">Сдача</div>
                     </div>
                 </label>
 
@@ -43,16 +43,16 @@
                 <div class="pictureConteiner">
                     <div class="uploadContainer">
                         <img id="uploadedImage" alt="Загрузите фотографию">
-                        <input type="file" class="upload-input" accept="image/*" onchange="previewImage(event)">
+                        <input type="file" id="uploadInput" class="uploadInput" accept="image/*" style="display: none;">
                     </div>
                     <button id="insertButton">Вставить</button>
                     <button id="downloadButton">Загрузить</button>
                 </div>
 
                 <!-- Настройка параметра "Распознование" -->
-                <div class="slider-container">
+                <div class="sliderContainer">
                     <div>Распознование:</div>
-                    <div class="slider-value" id="sliderValue">50</div>
+                    <div class="sliderValue" id="sliderValue">50</div>
                     <div>%</div>
                     <input type="range" id="valueSlider" class="slider" min="0" max="100" value="50">
                 </div>
@@ -62,25 +62,25 @@
             
             <div class="cell bottom-right">
                 <!-- Таблица с инструментами -->
-                <div class="instruments-container">
+                <div class="instrumentsContainer">
                     <!-- Заголовок таблицы -->
-                    <div class="table-header">
+                    <div class="tableHeader">
                         <p>Список распознанных инструментов</p>
                     </div>
                     
                     <!-- Заголовки колонок -->
-                    <div class="table-column-headers">
-                        <div class="instrument-col">Инструмент</div>
-                        <div class="finding-col">Нахождение</div>
+                    <div class="tableColumnHeaders">
+                        <div class="instrumentCol">Инструмент</div>
+                        <div class="findingCol">Нахождение</div>
                     </div>
                     
                     <!-- Контейнер для скроллируемого контента -->
-                    <div class="table-content" id="tableContent">
+                    <div class="tableContent" id="tableContent">
                         <div class="loading">Загрузка данных...</div>
                     </div>
                     
                     <!-- Футер таблицы -->
-                    <div class="table-footer">
+                    <div class="tableFooter">
                         <div>Соответствие:</div>
                     </div>
                 </div>
@@ -95,13 +95,15 @@
         </div>
     </main>
     
-    <footer>
-        <div class="footerBlock">
-            <h2>Ифаркатон</h2>
-            <p>Текст тексттекст тексттекст текст текст тексттексттекст текст текст тексттексттекст тексттексттекст тексттекст текст текст текст а текст. Текст тексттекст тексттекст текст текст тексттексттекст текст текст тексттексттекст тексттексттекст тексттекст текст текст текст а текст.</p>
-        </div>
-        <!-- Подвал сайта -->
-    </footer>
+    <div class="cell footer-cell">
+        <footer>
+            <div class="footerBlock">
+                <h2>Ифаркатон</h2>
+                <p>Текст тексттекст тексттекст текст текст тексттексттекст текст текст тексттексттекст тексттексттекст тексттекст текст текст текст а текст. Текст тексттекст тексттекст текст текст тексттексттекст текст текст тексттексттекст тексттексттекст тексттекст текст текст текст а текст.</p>
+            </div>
+            <!-- Подвал сайта -->
+        </footer>
+    </div>
     
     <!-- Подключение JavaScript -->
     <script src="script.js"></script>
