@@ -10,6 +10,7 @@ import os
 from datetime import datetime
 import uuid
 from pathlib import Path
+import requests
 
 # Настройки базы данных
 SQLALCHEMY_DATABASE_URL = "sqlite:///./tools.db"
@@ -116,9 +117,8 @@ async def process_tools(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error saving image: {str(e)}")
     
-    # Здесь должна быть ваша логика распознавания инструментов на изображении
-    # Пока используем заглушку
-    recognized_tools = await recognize_tools_from_image(file_path, recognition_threshold)
+    # Логика распознавания инструментов на изображении
+    recognized_tools, image_base64 = await recognize_tools_from_image(file_path, recognition_threshold)
     
     # Выбор таблицы в зависимости от типа операции
     if operation_type == "issue":
@@ -143,43 +143,66 @@ async def process_tools(
         "order_id": db_record.IdOrder,
         "tabel_id": db_record.TabelID,
         "image_url": f"/uploads/{filename}",
-        "recognized_tools": recognized_tools
+        "recognized_tools": recognized_tools,
+        "image_base64": image_base64
     }
+
+
+CV_URL = os.getenv("CV_URL", "http://localhost:8001/predict")
 
 async def recognize_tools_from_image(image_path: Path, threshold: int) -> dict:
     """
-    Заглушка для функции распознавания инструментов
-    В реальности здесь должна быть ваша ML-модель
+    Отправляет сохранённое изображение в CV-сервис,
+    получает список предсказаний и преобразует их к полям БД.
     """
-    # TODO: Заменить на реальное распознавание
-    # Пока возвращаем тестовые данные
-    return {
-        "screwdriver_minus": 1,
-        "screwdriver_plus": 2,
-        "screwdriver_on_the_offset_cross": 0,
-        "whirlpool": 1,
-        "contouring_pliers": 0,
-        "pliers": 1,
-        "sharnitsa": 0,
-        "adjustable_wrench": 1,
-        "oil_can_opener": 0,
-        "horn_wrench_union": 1,
-        "side_cutters": 0
+
+    # Открываем и отправляем файл в CV
+    with open(image_path, "rb") as f:
+        files = {"file": (image_path.name, f, "image/jpeg")}
+        resp = requests.post(CV_URL, files=files, data={"conf": threshold/100})
+        resp.raise_for_status()
+        data = resp.json()
+
+    # Маппинг YOLO-классов -> поля в таблицах backend
+    CLASS_MAP = {
+        "Отвертка_минус": "screwdriver_minus",
+        "Отвертка_плюс": "screwdriver_plus",
+        "Отвертка_смещенный_крест": "screwdriver_on_the_offset_cross",
+        "Коловорот": "whirlpool",
+        "Пассатижи_контровочные": "contouring_pliers",
+        "Пассатижи": "pliers",
+        "Шэрница": "sharnitsa",
+        "Разводной_ключ": "adjustable_wrench",
+        "Открывашка": "oil_can_opener",
+        "Ключ_рожковый_накидной_3_4": "horn_wrench_union",
+        "Бокорезы": "side_cutters",
     }
 
-@app.get("/api/instruments")
-def get_instruments(db: Session = Depends(get_db)):
-    """
-    Получение списка инструментов для таблицы (заглушка)
-    """
-    # Здесь можно вернуть данные из БД или статические данные
-    mock_data = [
-        {"instrument": "Молоток", "finding": "96"},
-        {"instrument": "Отвертка", "finding": "98"},
-        {"instrument": "Плоскогубцы", "finding": "99"},
-        # ... остальные данные
-    ]
-    return mock_data
+    # Инициализируем все поля 0
+    counts = {field: 0 for field in CLASS_MAP.values()}
+
+    # Считаем детекции по классам
+    for pred in data.get("predictions", []):
+        yolo_name = pred.get("class_name")
+        if yolo_name in CLASS_MAP:
+            db_field = CLASS_MAP[yolo_name]
+            counts[db_field] += 1
+
+    return counts, data.get("image_base64") 
+
+# @app.get("/api/instruments")
+# def get_instruments(db: Session = Depends(get_db)):
+#     """
+#     Получение списка инструментов для таблицы (заглушка)
+#     """
+#     # Здесь можно вернуть данные из БД или статические данные
+#     mock_data = [
+#         {"instrument": "Молоток", "finding": "96"},
+#         {"instrument": "Отвертка", "finding": "98"},
+#         {"instrument": "Плоскогубцы", "finding": "99"},
+#         # ... остальные данные
+#     ]
+#     return mock_data
 
 @app.get("/")
 def read_root():
@@ -255,49 +278,6 @@ def get_db_status(db: Session = Depends(get_db)):
         "database_file": "tools.db",
         "uploaded_images_count": len(list(UPLOAD_DIR.glob("*"))) if UPLOAD_DIR.exists() else 0
     }
-
-
-@app.post("/api/test-add-record")
-def test_add_record(
-    operation_type: str = "issue",
-    tabel_id: int = 99999,
-    db: Session = Depends(get_db)
-):
-    """Тестовый эндпоинт для добавления записи в БД"""
-    
-    if operation_type == "issue":
-        db_model = ToolIssue
-    else:
-        db_model = ToolReturn
-    
-    db_record = db_model(
-        TabelID=tabel_id,
-        image_path="test_image.jpg",
-        screwdriver_minus=1,
-        screwdriver_plus=2,
-        screwdriver_on_the_offset_cross=0,
-        whirlpool=1,
-        contouring_pliers=0,
-        pliers=1,
-        sharnitsa=0,
-        adjustable_wrench=1,
-        oil_can_opener=0,
-        horn_wrench_union=1,
-        side_cutters=0
-    )
-    
-    db.add(db_record)
-    db.commit()
-    db.refresh(db_record)
-    
-    return {
-        "success": True,
-        "message": f"Тестовая запись добавлена в {operation_type}",
-        "order_id": db_record.IdOrder
-    }
-
-
-
 
 if __name__ == "__main__":
     import uvicorn

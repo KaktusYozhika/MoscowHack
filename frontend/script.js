@@ -121,17 +121,17 @@ async function loadInstrumentsData(operationType = 'issue') {
         // Создаем массив инструментов на основе данных из БД
         const instrumentsList = [];
         
-        if (latestRecord.screwdriver_minus > 0) instrumentsList.push({ instrument: "Отвертка «-»", finding: "95" });
-        if (latestRecord.screwdriver_plus > 0) instrumentsList.push({ instrument: "Отвертка «+»", finding: "96" });
-        if (latestRecord.screwdriver_on_the_offset_cross > 0) instrumentsList.push({ instrument: "Отвертка на смещенный крест", finding: "94" });
-        if (latestRecord.whirlpool > 0) instrumentsList.push({ instrument: "Коловорот", finding: "97" });
-        if (latestRecord.contouring_pliers > 0) instrumentsList.push({ instrument: "Пассатижи контровочные", finding: "98" });
-        if (latestRecord.pliers > 0) instrumentsList.push({ instrument: "Пассатижи", finding: "99" });
-        if (latestRecord.sharnitsa > 0) instrumentsList.push({ instrument: "Шарница", finding: "93" });
-        if (latestRecord.adjustable_wrench > 0) instrumentsList.push({ instrument: "Разводной ключ", finding: "96" });
-        if (latestRecord.oil_can_opener > 0) instrumentsList.push({ instrument: "Открывашка для банок с маслом", finding: "95" });
-        if (latestRecord.horn_wrench_union > 0) instrumentsList.push({ instrument: "Ключ рожковый/накидной ¾", finding: "97" });
-        if (latestRecord.side_cutters > 0) instrumentsList.push({ instrument: "Бокорезы", finding: "98" });
+        if (latestRecord.screwdriver_minus > 0) instrumentsList.push({ instrument: "Отвертка «-»", finding: latestRecord.screwdriver_minus });
+        if (latestRecord.screwdriver_plus > 0) instrumentsList.push({ instrument: "Отвертка «+»", finding: latestRecord.screwdriver_plus });
+        if (latestRecord.screwdriver_on_the_offset_cross > 0) instrumentsList.push({ instrument: "Отвертка на смещенный крест", finding: latestRecord.screwdriver_on_the_offset_cross });
+        if (latestRecord.whirlpool > 0) instrumentsList.push({ instrument: "Коловорот", finding: latestRecord.whirlpool });
+        if (latestRecord.contouring_pliers > 0) instrumentsList.push({ instrument: "Пассатижи контровочные", finding: latestRecord.contouring_pliers });
+        if (latestRecord.pliers > 0) instrumentsList.push({ instrument: "Пассатижи", finding: latestRecord.pliers });
+        if (latestRecord.sharnitsa > 0) instrumentsList.push({ instrument: "Шарница", finding: latestRecord.sharnitsa });
+        if (latestRecord.adjustable_wrench > 0) instrumentsList.push({ instrument: "Разводной ключ", finding: latestRecord.adjustable_wrench });
+        if (latestRecord.oil_can_opener > 0) instrumentsList.push({ instrument: "Открывашка для банок с маслом", finding: latestRecord.oil_can_opener });
+        if (latestRecord.horn_wrench_union > 0) instrumentsList.push({ instrument: "Ключ рожковый/накидной ¾", finding: latestRecord.horn_wrench_union });
+        if (latestRecord.side_cutters > 0) instrumentsList.push({ instrument: "Бокорезы", finding: latestRecord.side_cutters });
         
         if (instrumentsList.length === 0) {
             tableContent.innerHTML = '<div class="loading">Не распознано ни одного инструмента</div>';
@@ -148,6 +148,15 @@ async function loadInstrumentsData(operationType = 'issue') {
             `;
             tableContent.appendChild(row);
         });
+
+        // // Показ размеченной картинки от CV
+        // if (latestRecord.image_base64) {
+        //     const imgElement = document.getElementById("cvResultImage");
+        //     if (imgElement) {
+        //         imgElement.src = "data:image/jpeg;base64," + latestRecord.image_base64;
+        //         imgElement.style.display = "block";  // на всякий случай включаем
+        //     }
+        // }
         
     } catch (error) {
         console.error('Ошибка загрузки данных:', error);

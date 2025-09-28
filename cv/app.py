@@ -5,6 +5,7 @@ import uuid
 from pathlib import Path
 import cv2
 import base64
+import tempfile
 
 app = FastAPI()
 
@@ -13,9 +14,10 @@ MODEL_PATH = Path("weights/best.pt")
 model = YOLO(str(MODEL_PATH))
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...), conf: float = 0.25):
+async def predict(file: UploadFile = File(...), conf: float = 0.6):
  
-    tmp_name = f"/tmp/{uuid.uuid4()}_{file.filename}"
+    tmp_dir = tempfile.gettempdir()
+    tmp_name = str(Path(tmp_dir) / f"{uuid.uuid4()}_{file.filename}")
     with open(tmp_name, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
  
