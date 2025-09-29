@@ -93,7 +93,7 @@ def get_db():
 async def process_tools(
     operation_type: str = Form(...),  # "issue" или "return"
     tabel_id: int = Form(...),
-    recognition_threshold: int = Form(50),
+    recognition_threshold: float = Form(50),
     image: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
@@ -150,7 +150,7 @@ async def process_tools(
 
 CV_URL = os.getenv("CV_URL", "http://localhost:8001/predict")
 
-async def recognize_tools_from_image(image_path: Path, threshold: int) -> dict:
+async def recognize_tools_from_image(image_path: Path, threshold: float) -> dict:
     """
     Отправляет сохранённое изображение в CV-сервис,
     получает список предсказаний и преобразует их к полям БД.
@@ -159,7 +159,8 @@ async def recognize_tools_from_image(image_path: Path, threshold: int) -> dict:
     # Открываем и отправляем файл в CV
     with open(image_path, "rb") as f:
         files = {"file": (image_path.name, f, "image/jpeg")}
-        resp = requests.post(CV_URL, files=files, data={"conf": threshold/100})
+        params = {"conf": threshold/100}
+        resp = requests.post(CV_URL, files=files, params=params)
         resp.raise_for_status()
         data = resp.json()
 

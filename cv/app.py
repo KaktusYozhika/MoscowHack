@@ -14,8 +14,8 @@ MODEL_PATH = Path("weights/best.pt")
 model = YOLO(str(MODEL_PATH))
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...), conf: float = 0.6):
- 
+async def predict(file: UploadFile = File(...), conf: float = 0.25):
+    
     tmp_dir = tempfile.gettempdir()
     tmp_name = str(Path(tmp_dir) / f"{uuid.uuid4()}_{file.filename}")
     with open(tmp_name, "wb") as buffer:
