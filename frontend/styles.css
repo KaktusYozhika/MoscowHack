@@ -274,7 +274,14 @@ body {
 
 .tableFooter {
     padding: 24px 0px 24px 66px;
-    /* flex-shrink: 0; */
+    display: flex;
+    align-items: center;
+    color: #303F52;
+}
+
+.complianceText {
+    margin-left: 20px;
+    color: #333;
 }
 
 /* Стили для скроллбара */
@@ -303,11 +310,6 @@ body {
 .tableRow:hover {
     background-color: #f8f9fa;
     border-radius: 30px;
-}
-
-.complianceText {
-    font-weight: bold;
-    color: #333;
 }
 
 .loading {

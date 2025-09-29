@@ -21,9 +21,6 @@ let currentOperationType = 'issue'; // По умолчанию "Выдача"
 switchInput.addEventListener('change', function() {
     currentOperationType = this.checked ? 'return' : 'issue';
     console.log('Выбрано:', this.checked ? 'Сдача' : 'Выдача');
-    
-    // Обновляем таблицу при переключении
-    loadInstrumentsData(currentOperationType);
 });
 
 
@@ -77,7 +74,7 @@ async function loadInstrumentsData(operationType = 'issue') {
     
     // Если табельный номер не введен, показываем пустую таблицу
     if (!tabelID) {
-        tableContent.innerHTML = '<div class="loading">Введите табельный номер</div>';
+        tableContent.innerHTML = '<div class="loading">Введите табельный номер, загрузите изображение и нажмите "Проверить"</div>';
         return;
     }
     
@@ -118,6 +115,25 @@ async function loadInstrumentsData(operationType = 'issue') {
         // Берем последнюю запись для этого табельного номера
         const latestRecord = filteredData[filteredData.length - 1];
         
+        // Проверка на соответсвие с идеальным набором
+        const recognizedTools = {
+            screwdriver_minus: latestRecord.screwdriver_minus,
+            screwdriver_plus: latestRecord.screwdriver_plus,
+            screwdriver_on_the_offset_cross: latestRecord.screwdriver_on_the_offset_cross,
+            whirlpool: latestRecord.whirlpool,
+            contouring_pliers: latestRecord.contouring_pliers,
+            pliers: latestRecord.pliers,
+            sharnitsa: latestRecord.sharnitsa,
+            adjustable_wrench: latestRecord.adjustable_wrench,
+            oil_can_opener: latestRecord.oil_can_opener,
+            horn_wrench_union: latestRecord.horn_wrench_union,
+            side_cutters: latestRecord.side_cutters
+        };
+        
+        // Определение статуса соответсвия
+        const complianceStatus = calculateComplianceStatus(recognizedTools);
+        updateComplianceStatus(complianceStatus);
+
         // Создаем массив инструментов на основе данных из БД
         const instrumentsList = [];
         
@@ -187,56 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
-
-// // Если API еще не готово, можно использовать тестовые данные
-// async function loadInstrumentsData() {
-//     const tableContent = document.getElementById('tableContent');
-    
-//     // Имитация задержки загрузки
-//     tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
-    
-//     // Имитируем задержку сети (можно убрать, если не нужно)
-//     await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // // Тестовые данные
-    // const mockData = [
-    //     { instrument: "Молоток", finding: "96" },
-    //     { instrument: "Отвертка", finding: "98" },
-    //     { instrument: "Отвертка на смещенный крест", finding: "98" },
-    //     { instrument: "Плоскогубцы", finding: "99" },
-    //     { instrument: "Ключ рожковый/накидной  ¾ ", finding: "98.7" },
-    //     { instrument: "Открывашка для банок с маслом", finding: "97" },
-    //     { instrument: "Рубанок", finding: "97.4" },
-    //     { instrument: "Стамеска", finding: "98.9" },
-    //     { instrument: "Отвертка на смещенный крест", finding: "96" },
-    //     { instrument: "Отвертка", finding: "98" },
-    //     { instrument: "Гаечный ключ", finding: "98" },
-    //     { instrument: "Плоскогубцы", finding: "99" },
-    //     { instrument: "Ключ рожковый/накидной  ¾ ", finding: "98.7" },
-    //     { instrument: "Открывашка для банок с маслом", finding: "97" },
-    //     { instrument: "Рубанок", finding: "97.4" },
-    //     { instrument: "Стамеска", finding: "98.9" },
-    //     // ... больше данных
-    // ];
-    
-    // tableContent.innerHTML = '';
-    
-    // mockData.forEach(item => {
-    //     const row = document.createElement('div');
-    //     row.className = 'tableRow';
-    //     row.innerHTML = `
-    //         <div class="instrumentCol">${item.instrument}</div>
-    //         <div class="findingCol">${item.finding}</div>
-    //     `;
-    //     tableContent.appendChild(row);
-    // });
-// }
-
-// // ВАЖНО: вызвать функцию после объявления
-// loadInstrumentsData();
-
-
 /////////////////////      Отправка данных на сервер       ///////////////////////
 
 async function submitToolData() {
@@ -270,8 +236,8 @@ async function submitToolData() {
         if (response.ok) {
             const result = await response.json();
             console.log('Успешно:', result);
-            
-            // Обновляем таблицу после успешной операции
+
+            // Обновление таблицы после успешной операции
             loadInstrumentsData(operationType);
         } else {
             const error = await response.json();
@@ -304,3 +270,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // Загружаем данные при загрузке страницы (по умолчанию "Выдача")
     loadInstrumentsData('issue');
 });
+
+// Функция для вычисления статуса соответствия с идеальным набором
+function calculateComplianceStatus(tools) {
+    const idealSet = {
+        screwdriver_minus: 1,
+        screwdriver_plus: 1,
+        screwdriver_on_the_offset_cross: 1,
+        whirlpool: 1,
+        contouring_pliers: 1,
+        pliers: 1,
+        sharnitsa: 1,
+        adjustable_wrench: 1,
+        oil_can_opener: 1,
+        horn_wrench_union: 1,
+        side_cutters: 1
+    };
+    
+    for (const [tool, idealCount] of Object.entries(idealSet)) {
+        const actualCount = tools[tool] || 0;
+        if (actualCount !== idealCount) {
+            return "Есть расхождения";
+        }
+    }
+    
+    return "Полное";
+}
+
+// Функция для обновления статуса соответствия с идеальным набором
+function updateComplianceStatus(status) {
+    const complianceElement = document.querySelector('.tableFooter');
+    if (complianceElement) {
+        complianceElement.innerHTML = `Соответствие: <span class="complianceText">${status}</span>`;
+        
+        // Добавляем стили в зависимости от статуса
+        const complianceText = complianceElement.querySelector('.complianceText');
+        if (complianceText) {
+            if (status === 'Есть расхождения') {
+                complianceText.style.color = '#A20000';
+            }
+        }
+    }
+}

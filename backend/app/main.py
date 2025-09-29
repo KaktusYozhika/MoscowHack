@@ -191,20 +191,6 @@ async def recognize_tools_from_image(image_path: Path, threshold: float) -> dict
 
     return counts, data.get("image_base64") 
 
-# @app.get("/api/instruments")
-# def get_instruments(db: Session = Depends(get_db)):
-#     """
-#     Получение списка инструментов для таблицы (заглушка)
-#     """
-#     # Здесь можно вернуть данные из БД или статические данные
-#     mock_data = [
-#         {"instrument": "Молоток", "finding": "96"},
-#         {"instrument": "Отвертка", "finding": "98"},
-#         {"instrument": "Плоскогубцы", "finding": "99"},
-#         # ... остальные данные
-#     ]
-#     return mock_data
-
 @app.get("/")
 def read_root():
     return {"message": "Tool Management API is running"}
