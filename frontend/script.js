@@ -115,7 +115,87 @@ async function loadInstrumentsData(operationType = 'issue') {
         // Берем последнюю запись для этого табельного номера
         const latestRecord = filteredData[filteredData.length - 1];
         
-        // Проверка на соответсвие с идеальным набором
+        // ЗАГРУЖАЕМ ДАННЫЕ РАСПОЗНАВАНИЯ ИЗ ПОСЛЕДНЕГО ЗАПРОСА
+        // (это нужно сохранять где-то, например в localStorage или переменной)
+        let recognitionData = JSON.parse(localStorage.getItem('last_recognition_data') || '{}');
+        
+        // Создаем массив инструментов на основе данных из БД
+        const instrumentsList = [];
+        
+        // Маппинг для отображения русских названий
+        const toolNames = {
+            "screwdriver_minus": "Отвертка «-»",
+            "screwdriver_plus": "Отвертка «+»", 
+            "screwdriver_on_the_offset_cross": "Отвертка на смещенный крест",
+            "whirlpool": "Коловорот",
+            "contouring_pliers": "Пассатижи контровочные",
+            "pliers": "Пассатижи",
+            "sharnitsa": "Шарница",
+            "adjustable_wrench": "Разводной ключ",
+            "oil_can_opener": "Открывашка для банок с маслом",
+            "horn_wrench_union": "Ключ рожковый/накидной ¾",
+            "side_cutters": "Бокорезы"
+        };
+        
+        // Маппинг для связи полей БД с классами YOLO
+        const toolMapping = {
+            "screwdriver_minus": "Отвертка_минус",
+            "screwdriver_plus": "Отвертка_плюс",
+            "screwdriver_on_the_offset_cross": "Отвертка_смещенный_крест",
+            "whirlpool": "Коловорот",
+            "contouring_pliers": "Пассатижи_контровочные", 
+            "pliers": "Пассатижи",
+            "sharnitsa": "Шэрница",
+            "adjustable_wrench": "Разводной_ключ",
+            "oil_can_opener": "Открывашка",
+            "horn_wrench_union": "Ключ_рожковый_накидной_3_4",
+            "side_cutters": "Бокорезы"
+        };
+        
+        // Добавляем инструменты в список для отображения
+        Object.keys(toolNames).forEach(toolKey => {
+            const count = latestRecord[toolKey] || 0;
+            if (count > 0) {
+                const toolName = toolNames[toolKey];
+                const yoloClass = toolMapping[toolKey];
+                
+                // Ищем confidence для этого инструмента
+                let confidenceText = "";
+                if (recognitionData.predictions) {
+                    const toolPredictions = recognitionData.predictions.filter(
+                        pred => pred.class_name === yoloClass
+                    );
+                    if (toolPredictions.length > 0) {
+                        // Берем максимальное confidence среди всех экземпляров
+                        const maxConfidence = Math.max(...toolPredictions.map(pred => pred.confidence));
+                        confidenceText = ` (${Math.round(maxConfidence * 100)}%)`;
+                    }
+                }
+                
+                instrumentsList.push({ 
+                    instrument: toolName, 
+                    finding: count + confidenceText 
+                });
+            }
+        });
+        
+        if (instrumentsList.length === 0) {
+            tableContent.innerHTML = '<div class="loading">Не распознано ни одного инструмента</div>';
+            return;
+        }
+        
+        // Отображаем инструменты
+        instrumentsList.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'tableRow';
+            row.innerHTML = `
+                <div class="instrumentCol">${item.instrument}</div>
+                <div class="findingCol">${item.finding}</div>
+            `;
+            tableContent.appendChild(row);
+        });
+        
+        // Проверяем соответствие
         const recognizedTools = {
             screwdriver_minus: latestRecord.screwdriver_minus,
             screwdriver_plus: latestRecord.screwdriver_plus,
@@ -130,54 +210,77 @@ async function loadInstrumentsData(operationType = 'issue') {
             side_cutters: latestRecord.side_cutters
         };
         
-        // Определение статуса соответсвия
         const complianceStatus = calculateComplianceStatus(recognizedTools);
         updateComplianceStatus(complianceStatus);
-
-        // Создаем массив инструментов на основе данных из БД
-        const instrumentsList = [];
         
-        if (latestRecord.screwdriver_minus > 0) instrumentsList.push({ instrument: "Отвертка «-»", finding: latestRecord.screwdriver_minus });
-        if (latestRecord.screwdriver_plus > 0) instrumentsList.push({ instrument: "Отвертка «+»", finding: latestRecord.screwdriver_plus });
-        if (latestRecord.screwdriver_on_the_offset_cross > 0) instrumentsList.push({ instrument: "Отвертка на смещенный крест", finding: latestRecord.screwdriver_on_the_offset_cross });
-        if (latestRecord.whirlpool > 0) instrumentsList.push({ instrument: "Коловорот", finding: latestRecord.whirlpool });
-        if (latestRecord.contouring_pliers > 0) instrumentsList.push({ instrument: "Пассатижи контровочные", finding: latestRecord.contouring_pliers });
-        if (latestRecord.pliers > 0) instrumentsList.push({ instrument: "Пассатижи", finding: latestRecord.pliers });
-        if (latestRecord.sharnitsa > 0) instrumentsList.push({ instrument: "Шарница", finding: latestRecord.sharnitsa });
-        if (latestRecord.adjustable_wrench > 0) instrumentsList.push({ instrument: "Разводной ключ", finding: latestRecord.adjustable_wrench });
-        if (latestRecord.oil_can_opener > 0) instrumentsList.push({ instrument: "Открывашка для банок с маслом", finding: latestRecord.oil_can_opener });
-        if (latestRecord.horn_wrench_union > 0) instrumentsList.push({ instrument: "Ключ рожковый/накидной ¾", finding: latestRecord.horn_wrench_union });
-        if (latestRecord.side_cutters > 0) instrumentsList.push({ instrument: "Бокорезы", finding: latestRecord.side_cutters });
-        
-        if (instrumentsList.length === 0) {
-            tableContent.innerHTML = '<div class="loading">Не распознано ни одного инструмента</div>';
-            return;
-        }
-        
-        // Отображаем инструменты в формате как в mockData
-        instrumentsList.forEach(item => {
-            const row = document.createElement('div');
-            row.className = 'tableRow';
-            row.innerHTML = `
-                <div class="instrumentCol">${item.instrument}</div>
-                <div class="findingCol">${item.finding}</div>
-            `;
-            tableContent.appendChild(row);
-        });
-
-        // // Показ размеченной картинки от CV
-        // if (latestRecord.image_base64) {
-        //     const imgElement = document.getElementById("cvResultImage");
-        //     if (imgElement) {
-        //         imgElement.src = "data:image/jpeg;base64," + latestRecord.image_base64;
-        //         imgElement.style.display = "block";  // на всякий случай включаем
-        //     }
-        // }
-        
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Ошибка загрузки данных:', error);
         tableContent.innerHTML = '<div class="loading">Ошибка загрузки данных</div>';
     }
+    //     // Проверка на соответсвие с идеальным набором
+    //     const recognizedTools = {
+    //         screwdriver_minus: latestRecord.screwdriver_minus,
+    //         screwdriver_plus: latestRecord.screwdriver_plus,
+    //         screwdriver_on_the_offset_cross: latestRecord.screwdriver_on_the_offset_cross,
+    //         whirlpool: latestRecord.whirlpool,
+    //         contouring_pliers: latestRecord.contouring_pliers,
+    //         pliers: latestRecord.pliers,
+    //         sharnitsa: latestRecord.sharnitsa,
+    //         adjustable_wrench: latestRecord.adjustable_wrench,
+    //         oil_can_opener: latestRecord.oil_can_opener,
+    //         horn_wrench_union: latestRecord.horn_wrench_union,
+    //         side_cutters: latestRecord.side_cutters
+    //     };
+        
+    //     // Определение статуса соответсвия
+    //     const complianceStatus = calculateComplianceStatus(recognizedTools);
+    //     updateComplianceStatus(complianceStatus);
+
+    //     // Создаем массив инструментов на основе данных из БД
+    //     const instrumentsList = [];
+        
+    //     if (latestRecord.screwdriver_minus > 0) instrumentsList.push({ instrument: "Отвертка «-»", finding: latestRecord.screwdriver_minus });
+    //     if (latestRecord.screwdriver_plus > 0) instrumentsList.push({ instrument: "Отвертка «+»", finding: latestRecord.screwdriver_plus });
+    //     if (latestRecord.screwdriver_on_the_offset_cross > 0) instrumentsList.push({ instrument: "Отвертка на смещенный крест", finding: latestRecord.screwdriver_on_the_offset_cross });
+    //     if (latestRecord.whirlpool > 0) instrumentsList.push({ instrument: "Коловорот", finding: latestRecord.whirlpool });
+    //     if (latestRecord.contouring_pliers > 0) instrumentsList.push({ instrument: "Пассатижи контровочные", finding: latestRecord.contouring_pliers });
+    //     if (latestRecord.pliers > 0) instrumentsList.push({ instrument: "Пассатижи", finding: latestRecord.pliers });
+    //     if (latestRecord.sharnitsa > 0) instrumentsList.push({ instrument: "Шарница", finding: latestRecord.sharnitsa });
+    //     if (latestRecord.adjustable_wrench > 0) instrumentsList.push({ instrument: "Разводной ключ", finding: latestRecord.adjustable_wrench });
+    //     if (latestRecord.oil_can_opener > 0) instrumentsList.push({ instrument: "Открывашка для банок с маслом", finding: latestRecord.oil_can_opener });
+    //     if (latestRecord.horn_wrench_union > 0) instrumentsList.push({ instrument: "Ключ рожковый/накидной ¾", finding: latestRecord.horn_wrench_union });
+    //     if (latestRecord.side_cutters > 0) instrumentsList.push({ instrument: "Бокорезы", finding: latestRecord.side_cutters });
+        
+    //     if (instrumentsList.length === 0) {
+    //         tableContent.innerHTML = '<div class="loading">Не распознано ни одного инструмента</div>';
+    //         return;
+    //     }
+        
+    //     // Отображаем инструменты в формате как в mockData
+    //     instrumentsList.forEach(item => {
+    //         const row = document.createElement('div');
+    //         row.className = 'tableRow';
+    //         row.innerHTML = `
+    //             <div class="instrumentCol">${item.instrument}</div>
+    //             <div class="findingCol">${item.finding}</div>
+    //         `;
+    //         tableContent.appendChild(row);
+    //     });
+
+    //     // // Показ размеченной картинки от CV
+    //     // if (latestRecord.image_base64) {
+    //     //     const imgElement = document.getElementById("cvResultImage");
+    //     //     if (imgElement) {
+    //     //         imgElement.src = "data:image/jpeg;base64," + latestRecord.image_base64;
+    //     //         imgElement.style.display = "block";  // на всякий случай включаем
+    //     //     }
+    //     // }
+        
+    // } catch (error) {
+    //     console.error('Ошибка загрузки данных:', error);
+    //     tableContent.innerHTML = '<div class="loading">Ошибка загрузки данных</div>';
+    // }
 }
 
 // Убираем автоматическую загрузку при старте и добавляем обработчики
@@ -236,6 +339,16 @@ async function submitToolData() {
         if (response.ok) {
             const result = await response.json();
             console.log('Успешно:', result);
+
+            // СОХРАНЯЕМ ДАННЫЕ РАСПОЗНАВАНИЯ ДЛЯ ОТОБРАЖЕНИЯ CONFIDENCE
+            // Здесь мы можем сохранить predictions из response CV-сервиса
+            // Если в result есть данные распознавания, сохраняем их
+            if (result.recognized_tools) {
+                // Сохраняем в localStorage для использования при отображении таблицы
+                localStorage.setItem('last_recognition_data', JSON.stringify({
+                    predictions: result.predictions_data // нужно убедиться, что этот параметр есть в ответе
+                }));
+            }
 
             // Обновление таблицы после успешной операции
             loadInstrumentsData(operationType);

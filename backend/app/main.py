@@ -120,6 +120,9 @@ async def process_tools(
     # Логика распознавания инструментов на изображении
     recognized_tools, image_base64 = await recognize_tools_from_image(file_path, recognition_threshold)
     
+    # Получаем полные данные распознавания для передачи confidence
+    full_recognition_data = await get_full_recognition_data(file_path, recognition_threshold)
+
     # Выбор таблицы в зависимости от типа операции
     if operation_type == "issue":
         db_model = ToolIssue
@@ -144,9 +147,18 @@ async def process_tools(
         "tabel_id": db_record.TabelID,
         "image_url": f"/uploads/{filename}",
         "recognized_tools": recognized_tools,
-        "image_base64": image_base64
+        "image_base64": image_base64,
+        "predictions_data": full_recognition_data.get("predictions", [])
     }
 
+async def get_full_recognition_data(image_path: Path, threshold: int) -> dict:
+    """Получает полные данные распознавания от CV-сервиса"""
+    with open(image_path, "rb") as f:
+        files = {"file": (image_path.name, f, "image/jpeg")}
+        params = {"conf": threshold/100}
+        resp = requests.post(CV_URL, files=files, params=params)
+        resp.raise_for_status()
+        return resp.json()
 
 CV_URL = os.getenv("CV_URL", "http://localhost:8001/predict")
 
