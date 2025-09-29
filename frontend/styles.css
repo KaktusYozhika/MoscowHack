@@ -120,7 +120,7 @@ body {
 
 .pictureConteiner {
     width: 466px;
-    height: 277px;
+    height: 450px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -129,7 +129,7 @@ body {
 
 .uploadContainer {
     width: 466px;
-    height: 211px;
+    height: 384px;
     background-color: #E2E9F4;
     border: 1px solid #F1F4FA;
     border-radius: 30px;
@@ -339,7 +339,7 @@ body {
 
 .buttonsBelowTable {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-top: 29px;
 }
 
@@ -358,7 +358,7 @@ button {
     transition: background-color 0.3s; /* Плавный переход цвета */
 }
 
-#check_save_Button {
+#check_Button {
     border: none;
     background-color: #1751A1;
     color: white;
@@ -369,7 +369,7 @@ button {
     border: 1px solid #F1F4FA;
     color: white;
 }
-#downloadButton {
+#downloadButton, #downloadReportButton {
     border: 1px solid #F1F4FA;
     background-color: #E2E9F4;
     color: #303F52
@@ -390,7 +390,6 @@ footer {
     margin-top: 142px;
     margin-left: 150px;
     margin-right: 150px;
-    margin-bottom: 139px;
     text-align: justify;
     padding-bottom: 105px;
     /* justify-content: end; */

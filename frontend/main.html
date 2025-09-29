@@ -13,13 +13,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body>
-    <!-- Основное содержимое страницы -->
-    <header>
-        <nav>
-            <!-- Навигационное меню -->
-        </nav>
-    </header>
-    
+    <!-- Основное содержимое страницы -->    
     <main class="mainBlock">
         <div class="gridContainer">
             <div class="cell top">
@@ -41,7 +35,7 @@
 
                 <!-- Загрузка картинки -->
                 <div class="pictureConteiner">
-                    <div class="uploadContainer">
+                    <div class="uploadContainer" id="uploadContainer">
                         <img id="uploadedImage" alt="Загрузите фотографию">
                         <input type="file" id="uploadInput" class="uploadInput" accept="image/*" style="display: none;">
                     </div>
@@ -57,7 +51,7 @@
                     <input type="range" id="valueSlider" class="slider" min="0" max="100" value="50">
                 </div>
 
-                <button id="check_save_Button">Проверить</button>
+                <button id="check_Button">Проверить</button>
             </div>
             
             <div class="cell bottom-right">
@@ -91,8 +85,7 @@
                 </div> -->
                 
                 <div class="buttonsBelowTable">
-                    <button id="check_save_Button">Сохранить в журнал</button>
-                    <button id="downloadButton">Скачать отчёт</button>
+                    <button id="downloadReportButton">Скачать отчёт</button>
                 </div>
                 
             </div>
@@ -103,8 +96,8 @@
     <div class="cell footer-cell">
         <footer>
             <div class="footerBlock">
-                <h2>Ифаркатон</h2>
-                <p>Текст тексттекст тексттекст текст текст тексттексттекст текст текст тексттексттекст тексттексттекст тексттекст текст текст текст а текст. Текст тексттекст тексттекст текст текст тексттексттекст текст текст тексттексттекст тексттексттекст тексттекст текст текст текст а текст.</p>
+                <h2>Инструменты на фото онлайн</h2>
+                <p>Данный сервис позволет находить инструменты на изображении и сравнивать их с эталлонным набором. При скачивании отчёта, устанавливается json-файл. Рекомендуем поставить порог распознавания для легких наборов равный 75, а для наборов, где инструменты лежат в сложной куче, равный 50</p>
             </div>
             <!-- Подвал сайта -->
         </footer>

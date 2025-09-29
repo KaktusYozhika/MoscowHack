@@ -37,10 +37,11 @@ slider.addEventListener('input', () => {
 
 /////////////////////      Изображение       ///////////////////////
 
+const uploadedImage = document.getElementById('uploadedImage');
 const downloadButton = document.getElementById('downloadButton');
 const uploadInput = document.getElementById('uploadInput');
 
-// Обработчик для кнопки "Вставить"
+// Обработчик для кнопки "Загрузить"
 downloadButton.addEventListener('click', function() {
     uploadInput.click(); // Программно кликаем на скрытый input
 });
@@ -79,7 +80,7 @@ async function loadInstrumentsData(operationType = 'issue') {
     }
     
     try {
-        tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
+        // tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
         
         // Загружаем данные в зависимости от типа операции
         let endpoint;
@@ -218,74 +219,11 @@ async function loadInstrumentsData(operationType = 'issue') {
         console.error('Ошибка загрузки данных:', error);
         tableContent.innerHTML = '<div class="loading">Ошибка загрузки данных</div>';
     }
-    //     // Проверка на соответсвие с идеальным набором
-    //     const recognizedTools = {
-    //         screwdriver_minus: latestRecord.screwdriver_minus,
-    //         screwdriver_plus: latestRecord.screwdriver_plus,
-    //         screwdriver_on_the_offset_cross: latestRecord.screwdriver_on_the_offset_cross,
-    //         whirlpool: latestRecord.whirlpool,
-    //         contouring_pliers: latestRecord.contouring_pliers,
-    //         pliers: latestRecord.pliers,
-    //         sharnitsa: latestRecord.sharnitsa,
-    //         adjustable_wrench: latestRecord.adjustable_wrench,
-    //         oil_can_opener: latestRecord.oil_can_opener,
-    //         horn_wrench_union: latestRecord.horn_wrench_union,
-    //         side_cutters: latestRecord.side_cutters
-    //     };
-        
-    //     // Определение статуса соответсвия
-    //     const complianceStatus = calculateComplianceStatus(recognizedTools);
-    //     updateComplianceStatus(complianceStatus);
-
-    //     // Создаем массив инструментов на основе данных из БД
-    //     const instrumentsList = [];
-        
-    //     if (latestRecord.screwdriver_minus > 0) instrumentsList.push({ instrument: "Отвертка «-»", finding: latestRecord.screwdriver_minus });
-    //     if (latestRecord.screwdriver_plus > 0) instrumentsList.push({ instrument: "Отвертка «+»", finding: latestRecord.screwdriver_plus });
-    //     if (latestRecord.screwdriver_on_the_offset_cross > 0) instrumentsList.push({ instrument: "Отвертка на смещенный крест", finding: latestRecord.screwdriver_on_the_offset_cross });
-    //     if (latestRecord.whirlpool > 0) instrumentsList.push({ instrument: "Коловорот", finding: latestRecord.whirlpool });
-    //     if (latestRecord.contouring_pliers > 0) instrumentsList.push({ instrument: "Пассатижи контровочные", finding: latestRecord.contouring_pliers });
-    //     if (latestRecord.pliers > 0) instrumentsList.push({ instrument: "Пассатижи", finding: latestRecord.pliers });
-    //     if (latestRecord.sharnitsa > 0) instrumentsList.push({ instrument: "Шарница", finding: latestRecord.sharnitsa });
-    //     if (latestRecord.adjustable_wrench > 0) instrumentsList.push({ instrument: "Разводной ключ", finding: latestRecord.adjustable_wrench });
-    //     if (latestRecord.oil_can_opener > 0) instrumentsList.push({ instrument: "Открывашка для банок с маслом", finding: latestRecord.oil_can_opener });
-    //     if (latestRecord.horn_wrench_union > 0) instrumentsList.push({ instrument: "Ключ рожковый/накидной ¾", finding: latestRecord.horn_wrench_union });
-    //     if (latestRecord.side_cutters > 0) instrumentsList.push({ instrument: "Бокорезы", finding: latestRecord.side_cutters });
-        
-    //     if (instrumentsList.length === 0) {
-    //         tableContent.innerHTML = '<div class="loading">Не распознано ни одного инструмента</div>';
-    //         return;
-    //     }
-        
-    //     // Отображаем инструменты в формате как в mockData
-    //     instrumentsList.forEach(item => {
-    //         const row = document.createElement('div');
-    //         row.className = 'tableRow';
-    //         row.innerHTML = `
-    //             <div class="instrumentCol">${item.instrument}</div>
-    //             <div class="findingCol">${item.finding}</div>
-    //         `;
-    //         tableContent.appendChild(row);
-    //     });
-
-    //     // // Показ размеченной картинки от CV
-    //     // if (latestRecord.image_base64) {
-    //     //     const imgElement = document.getElementById("cvResultImage");
-    //     //     if (imgElement) {
-    //     //         imgElement.src = "data:image/jpeg;base64," + latestRecord.image_base64;
-    //     //         imgElement.style.display = "block";  // на всякий случай включаем
-    //     //     }
-    //     // }
-        
-    // } catch (error) {
-    //     console.error('Ошибка загрузки данных:', error);
-    //     tableContent.innerHTML = '<div class="loading">Ошибка загрузки данных</div>';
-    // }
 }
 
 // Убираем автоматическую загрузку при старте и добавляем обработчики
 document.addEventListener('DOMContentLoaded', function() {
-    const checkButton = document.getElementById('check_save_Button');
+    const checkButton = document.getElementById('check_Button');
     const tabelInput = document.querySelector('.TebelID');
     
     // Загружаем данные только при нажатии кнопки "Проверить"
@@ -296,6 +234,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Пожалуйста, введите табельный номер');
                 return;
             }
+
+            // СРАЗУ показываем "Загрузка данных..." при нажатии кнопки
+            const tableContent = document.getElementById('tableContent');
+            tableContent.innerHTML = '<div class="loading">Загрузка данных...</div>';
+
             submitToolData(); // Эта функция вызовет loadInstrumentsData после успешной обработки
         });
     }
@@ -340,18 +283,23 @@ async function submitToolData() {
             const result = await response.json();
             console.log('Успешно:', result);
 
-            // СОХРАНЯЕМ ДАННЫЕ РАСПОЗНАВАНИЯ ДЛЯ ОТОБРАЖЕНИЯ CONFIDENCE
+            // Сохранение данных распознавания для отображения Confidence
             // Здесь мы можем сохранить predictions из response CV-сервиса
             // Если в result есть данные распознавания, сохраняем их
             if (result.recognized_tools) {
-                // Сохраняем в localStorage для использования при отображении таблицы
                 localStorage.setItem('last_recognition_data', JSON.stringify({
                     predictions: result.predictions_data // нужно убедиться, что этот параметр есть в ответе
                 }));
             }
 
+            // ОБНОВЛЯЕМ ИЗОБРАЖЕНИЕ НА РАЗМЕЧЕННОЕ
+            if (result.image_base64) {
+                updateImageWithBoundingBoxes(result.image_base64);
+            }
+
             // Обновление таблицы после успешной операции
-            loadInstrumentsData(operationType);
+            updateTableWithResultData(result, operationType);
+            // loadInstrumentsData(operationType);
         } else {
             const error = await response.json();
             console.error('Ошибка:', error);
@@ -361,6 +309,30 @@ async function submitToolData() {
         console.error('Ошибка сети:', error);
         alert('Ошибка сети: ' + error.message);
     }
+}
+
+// Функция для обновления изображения с боксами
+function updateImageWithBoundingBoxes(imageBase64) {
+    const uploadedImage = document.getElementById('uploadedImage');
+    if (uploadedImage) {
+        // Создаем Data URL из base64
+        uploadedImage.src = "data:image/jpeg;base64," + imageBase64;
+        uploadedImage.style.display = 'block';
+        
+        // Обновляем файл в input для возможности повторной отправки
+        convertBase64ToFile(imageBase64).then(file => {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            document.getElementById('uploadInput').files = dataTransfer.files;
+        });
+    }
+}
+
+// Вспомогательная функция для конвертации base64 обратно в File
+async function convertBase64ToFile(base64Data) {
+    const response = await fetch("data:image/jpeg;base64," + base64Data);
+    const blob = await response.blob();
+    return new File([blob], "annotated_image.jpg", { type: "image/jpeg" });
 }
 
 // Функция для экранирования HTML
@@ -375,7 +347,7 @@ function escapeHtml(unsafe) {
 
 // Назначаем обработчик на кнопку "Проверить"
 document.addEventListener('DOMContentLoaded', function() {
-    const checkButton = document.getElementById('check_save_Button');
+    const checkButton = document.getElementById('check_Button');
     if (checkButton) {
         checkButton.addEventListener('click', submitToolData);
     }
@@ -424,4 +396,131 @@ function updateComplianceStatus(status) {
             }
         }
     }
+}
+
+/////////////////////      Скачивание отчета       ///////////////////////
+
+document.getElementById('downloadReportButton').addEventListener('click', function() {
+    downloadRawReport(); // Исправлено: вызываем существующую функцию
+});
+
+async function downloadRawReport() {
+    try {
+        const recognitionData = JSON.parse(localStorage.getItem('last_recognition_data') || '{}');
+        
+        if (!recognitionData.predictions || recognitionData.predictions.length === 0) {
+            alert('Нет данных для отчета. Сначала выполните распознавание изображения.');
+            return;
+        }
+        
+        // Скачиваем "сырые" данные от модели
+        const rawReport = {
+            model_output: recognitionData,
+            download_time: new Date().toISOString(),
+            additional_info: {
+                tabel_id: document.querySelector('.TebelID').value || 'Не указан',
+                operation_type: switchInput.checked ? 'Сдача' : 'Выдача',
+                recognition_threshold: slider.value + '%'
+            }
+        };
+        
+        const reportJson = JSON.stringify(rawReport, null, 2);
+        const blob = new Blob([reportJson], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `instrument_report_${new Date().toISOString().slice(0, 10)}_${document.querySelector('.TebelID').value || 'unknown'}.json`;
+        document.body.appendChild(a);
+        a.click();
+        
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        console.log('Отчет успешно скачан');
+        
+    } catch (error) {
+        console.error('Ошибка при скачивании отчета:', error);
+        alert('Ошибка при создании отчета: ' + error.message);
+    }
+}
+
+
+// И добавьте новую функцию:
+function updateTableWithResultData(result, operationType) {
+    const tableContent = document.getElementById('tableContent');
+    tableContent.innerHTML = '';
+    
+    // Используем данные из result, а не из БД
+    const recognizedTools = result.recognized_tools;
+    
+    // Маппинг для отображения русских названий
+    const toolNames = {
+        "screwdriver_minus": "Отвертка «-»",
+        "screwdriver_plus": "Отвертка «+»", 
+        "screwdriver_on_the_offset_cross": "Отвертка на смещенный крест",
+        "whirlpool": "Коловорот",
+        "contouring_pliers": "Пассатижи контровочные",
+        "pliers": "Пассатижи",
+        "sharnitsa": "Шарница",
+        "adjustable_wrench": "Разводной ключ",
+        "oil_can_opener": "Открывашка для банок с маслом",
+        "horn_wrench_union": "Ключ рожковый/накидной ¾",
+        "side_cutters": "Бокорезы"
+    };
+    
+    // Добавляем инструменты в список для отображения
+    Object.keys(toolNames).forEach(toolKey => {
+        const count = recognizedTools[toolKey] || 0;
+        if (count > 0) {
+            const toolName = toolNames[toolKey];
+            
+            // Ищем confidence для этого инструмента
+            let confidenceText = "";
+            if (result.predictions_data) {
+                const toolPredictions = result.predictions_data.filter(
+                    pred => pred.class_name === getYoloClassName(toolKey)
+                );
+                if (toolPredictions.length > 0) {
+                    const maxConfidence = Math.max(...toolPredictions.map(pred => pred.confidence));
+                    confidenceText = ` (${Math.round(maxConfidence * 100)}%)`;
+                }
+            }
+            
+            const row = document.createElement('div');
+            row.className = 'tableRow';
+            row.innerHTML = `
+                <div class="instrumentCol">${toolName}</div>
+                <div class="findingCol">${count}${confidenceText}</div>
+            `;
+            tableContent.appendChild(row);
+        }
+    });
+    
+    if (tableContent.children.length === 0) {
+        tableContent.innerHTML = '<div class="loading">Не распознано ни одного инструмента</div>';
+        return;
+    }
+    
+    // Проверяем соответствие
+    const complianceStatus = calculateComplianceStatus(recognizedTools);
+    updateComplianceStatus(complianceStatus);
+}
+
+// Вспомогательная функция для получения YOLO имени класса
+function getYoloClassName(toolKey) {
+    const toolMapping = {
+        "screwdriver_minus": "Отвертка_минус",
+        "screwdriver_plus": "Отвертка_плюс",
+        "screwdriver_on_the_offset_cross": "Отвертка_смещенный_крест",
+        "whirlpool": "Коловорот",
+        "contouring_pliers": "Пассатижи_контровочные", 
+        "pliers": "Пассатижи",
+        "sharnitsa": "Шэрница",
+        "adjustable_wrench": "Разводной_ключ",
+        "oil_can_opener": "Открывашка",
+        "horn_wrench_union": "Ключ_рожковый_накидной_3_4",
+        "side_cutters": "Бокорезы"
+    };
+    return toolMapping[toolKey];
 }
