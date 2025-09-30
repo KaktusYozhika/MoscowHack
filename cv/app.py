@@ -25,33 +25,39 @@ async def predict(file: UploadFile = File(...), conf: float = 0.25):
     with open(tmp_name, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
  
-    results = model.predict(tmp_name, imgsz=1024, conf=conf, save=False, save_conf=True)
+    # Используем встроенную отрисовку Ultralytics
+    results = model.predict(tmp_name, imgsz=1280, conf=conf, save=False, save_conf=True, agnostic_nms=True, iou=0.45)
 
     predictions = []
- 
-    img = cv2.imread(tmp_name)
+    
+    # Берем первый результат (т.к. обрабатываем одно изображение)
+    r = results[0]
+    
+    # Используем встроенный метод plot() для отрисовки
+    plotted_img = r.plot()  # возвращает numpy array в формате RGB
+    
+    # Конвертируем RGB в BGR для OpenCV
+    plotted_img_bgr = cv2.cvtColor(plotted_img, cv2.COLOR_RGB2BGR)
+    
+    # Собираем предсказания
+    for box in r.boxes:
+        cls_id = int(box.cls[0])
+        conf = float(box.conf[0])
+        xyxy = box.xyxy[0].tolist()
 
-    for r in results:
-        for box in r.boxes:
-            cls_id = int(box.cls[0])
-            conf = float(box.conf[0])
-            xyxy = box.xyxy[0].tolist()
-
-            predictions.append({
-                "class_id": cls_id,
-                "class_name": model.names[cls_id],
-                "confidence": round(conf, 3),
-                "bbox": [round(v, 2) for v in xyxy]
-            })
+        predictions.append({
+            "class_id": cls_id,
+            "class_name": model.names[cls_id],
+            "confidence": round(conf, 3),
+            "bbox": [round(v, 2) for v in xyxy]
+        })
  
-            x1, y1, x2, y2 = map(int, xyxy)
-            cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(img, f"{model.names[cls_id]} {conf:.2f}",
-                        (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
-                        (0, 255, 0), 2)
- 
-    _, buffer = cv2.imencode(".jpg", img)
+    # Кодируем изображение
+    _, buffer = cv2.imencode(".jpg", plotted_img_bgr)
     img_base64 = base64.b64encode(buffer).decode("utf-8")
+
+    # Удаляем временный файл
+    Path(tmp_name).unlink(missing_ok=True)
 
     return {
         "filename": file.filename,
