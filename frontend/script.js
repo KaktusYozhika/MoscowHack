@@ -1,3 +1,4 @@
+const API_BASE = (window.API_BASE_URL || "http://localhost:8000").replace(/\/+$/,'');
 /////////////////////      Для поля табельного номера       ///////////////////////
 
 const inputElement = document.querySelector('.TebelID');
@@ -85,10 +86,12 @@ async function loadInstrumentsData(operationType = 'issue') {
         // Загружаем данные в зависимости от типа операции
         let endpoint;
         if (operationType === 'issue') {
-            endpoint = 'http://localhost:8000/api/issues';
+            endpoint = `${API_BASE}/api/issues`;
         } else {
-            endpoint = 'http://localhost:8000/api/returns';
+            endpoint = `${API_BASE}/api/returns`;
         }
+
+
         
         const response = await fetch(endpoint);
         
@@ -274,7 +277,7 @@ async function submitToolData() {
     formData.append('image', imageFile);
     
     try {
-        const response = await fetch('http://localhost:8000/api/process-tools', {
+        const response = await fetch(`${API_BASE}/api/process-tools`, {
             method: 'POST',
             body: formData
         });

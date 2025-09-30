@@ -9,6 +9,10 @@ import tempfile
 
 app = FastAPI()
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
  
 MODEL_PATH = Path("weights/best.pt")
 model = YOLO(str(MODEL_PATH))

@@ -12,6 +12,7 @@ import uuid
 from pathlib import Path
 import requests
 
+
 # Настройки базы данных
 SQLALCHEMY_DATABASE_URL = "sqlite:///./tools.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -66,13 +67,19 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Tool Management API")
 
 # Настройка CORS
+allowed_origins = os.getenv("CORS_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # В продакшене укажите конкретные домены
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+ML_SERVICE_URL = os.getenv("ML_SERVICE_URL", "http://localhost:8001/predict")
+
+
 
 # Папка для загрузки изображений
 UPLOAD_DIR = Path("uploaded_images")
@@ -156,11 +163,11 @@ async def get_full_recognition_data(image_path: Path, threshold: int) -> dict:
     with open(image_path, "rb") as f:
         files = {"file": (image_path.name, f, "image/jpeg")}
         params = {"conf": threshold/100}
-        resp = requests.post(CV_URL, files=files, params=params)
+        resp = requests.post(ML_SERVICE_URL, files=files, params=params)
         resp.raise_for_status()
         return resp.json()
 
-CV_URL = os.getenv("CV_URL", "http://localhost:8001/predict")
+# CV_URL = os.getenv("ML_SERVICE_URL", "http://localhost:8001/predict")
 
 async def recognize_tools_from_image(image_path: Path, threshold: float) -> dict:
     """
@@ -172,7 +179,7 @@ async def recognize_tools_from_image(image_path: Path, threshold: float) -> dict
     with open(image_path, "rb") as f:
         files = {"file": (image_path.name, f, "image/jpeg")}
         params = {"conf": threshold/100}
-        resp = requests.post(CV_URL, files=files, params=params)
+        resp = requests.post(ML_SERVICE_URL, files=files, params=params)
         resp.raise_for_status()
         data = resp.json()
 
@@ -207,6 +214,9 @@ async def recognize_tools_from_image(image_path: Path, threshold: float) -> dict
 def read_root():
     return {"message": "Tool Management API is running"}
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 # ПРОВЕРКА БД
@@ -280,4 +290,5 @@ def get_db_status(db: Session = Depends(get_db)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

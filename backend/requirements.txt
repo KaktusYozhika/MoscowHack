@@ -16,6 +16,8 @@ python-dotenv==1.0.0
 # Обработка изображений
 pillow==10.0.0
 
+requests
+
 # HTTP-запросы
 # requests==2.31.0
 

@@ -1,11 +1,12 @@
-FROM ultralytics/ultralytics:latest  # готовый образ с YOLO
+FROM ultralytics/ultralytics:latest  
 
 WORKDIR /app
 
 COPY app.py /app
 COPY weights /app/weights
 
-RUN pip install fastapi uvicorn
+RUN pip install fastapi uvicorn python-multipart
+
 
 EXPOSE 8000
 
