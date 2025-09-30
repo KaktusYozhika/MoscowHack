@@ -377,12 +377,17 @@ button {
     border: 1px solid #F1F4FA;
     color: white;
 }
-#downloadButton, #downloadReportButton {
+#downloadButton {
     border: 1px solid #F1F4FA;
     background-color: #E2E9F4;
-    color: #303F52
+    color: #303F52;
 }
-
+#downloadReportButton {
+    border: 1px solid #F1F4FA;
+    background-color: #E2E9F4;
+    color: #303F52;
+    padding: 15px 52px;
+}
 .buttonCheck:hover {
     /* background-color: yellow; */
 }
