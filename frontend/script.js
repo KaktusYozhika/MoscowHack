@@ -259,7 +259,7 @@ async function submitToolData() {
     const operationType = switchInput.checked ? 'return' : 'issue';
     const recognitionThreshold = slider.value;
     const imageFile = document.querySelector('.uploadInput').files[0];
-    
+
     if (!tabelID) {
         alert('Пожалуйста, введите табельный номер');
         return;
@@ -321,13 +321,6 @@ function updateImageWithBoundingBoxes(imageBase64) {
         // Создаем Data URL из base64
         uploadedImage.src = "data:image/jpeg;base64," + imageBase64;
         uploadedImage.style.display = 'block';
-        
-        // Обновляем файл в input для возможности повторной отправки
-        convertBase64ToFile(imageBase64).then(file => {
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            document.getElementById('uploadInput').files = dataTransfer.files;
-        });
     }
 }
 
