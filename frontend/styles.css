@@ -207,7 +207,7 @@ body {
 
 .sliderValue {
     padding-top: 3px;
-    padding-left: 27px; /* Размер шрифта */
+    padding-left: 27px;
 }
 
 
@@ -498,7 +498,346 @@ p {
     
 }
 
+:root {
+    --k: 0.8;
+}
+
 @media (max-width: 1290px) {
+    .mainBlock {
+        max-width: calc(1260px*var(--k));
+        padding: 0 calc(18px*var(--k));
+        margin-top: calc(127.8px*var(--k));
+    }
+
+    .gridContainer {
+    row-gap: calc(78.3px*var(--k));
+    column-gap: calc(110.7px*var(--k));
+    }
+
+    .TebelID {
+        width: calc(420.3px*var(--k));
+        height: calc(54px*var(--k));
+        padding-left: calc(38.7px*var(--k));
+        margin-bottom: calc(33.3px*var(--k));
+        font-size: calc(21.6px*var(--k));
+    }
+
+    .switchLabel {
+        width: calc(420.3px*var(--k));
+        height: calc(54px*var(--k));
+    }
+
+    .switchOption {
+        font-size: calc(21.6px*var(--k));
+    }
+
+    .pictureConteiner {
+        width: calc(420.3px*var(--k));
+        height: calc(405px *var(--k));
+        margin: calc(33.3px *var(--k)) 0 calc(33.3px*var(--k)) 0;
+    }
+
+    .uploadContainer {
+        width: calc(420.3px *var(--k));
+        height: calc(345.6px*var(--k));
+    }
+
+    .sliderContainer {
+        width: calc(420.3px *var(--k));
+        height: calc(65.7px *var(--k));
+        padding-top: calc(16.65px *var(--k));
+        margin-bottom:calc(33.3px *var(--k));
+        font-size: calc(21.6px*var(--k));
+    }
+
+    .slider {
+        width: calc(420.3px *var(--k));
+        height: calc(4.5px *var(--k));
+    }
+
+    .slider::-webkit-slider-thumb {
+        width: calc( 8.1px *var(--k)); /* Ширина ползунка */
+        height: calc(35.5px *var(--k)); /* Высота ползунка */
+    }
+
+    .sliderValue {
+        padding-top: calc(2.7px *var(--k));
+        padding-left: calc(24.3px *var(--k));
+    }
+
+    .instrumentsContainer {
+        width: calc(654.3px *var(--k)); 
+        height: calc(718.2px *var(--k));
+        font-size: calc(21.6px *var(--k));
+    }
+
+    .tableHeader {
+        height: calc(74.7px *var(--k));
+        padding-left: calc(45px * var(--k));
+    }
+
+    .tableHeader p {
+        font-size: calc(21.6px  * var(--k));
+    }
+
+    .tableColumnHeaders .instrumentCol{
+        height: calc(90px * var(--k));
+        padding-left: calc(76.5px * var(--k));
+    }
+
+    .tableColumnHeaders .findingCol {
+        height: calc(90px * var(--k));
+        padding-right: calc(35px * var(--k));
+    }
+
+
+    .instrumentCol {
+        width: calc(291.6px * var(--k));
+        padding-left: calc(41.4px * var(--k));
+    }
+
+    .findingCol {
+        width: calc(291.6px * var(--k));
+    }
+
+    .tableFooter {
+        padding: calc(21.6px * var(--k)) 0px calc(21.6px * var(--k)) calc(59.4px * var(--k));
+    }
+
+    .complianceText {
+        margin-left: calc(18px * var(--k));
+    }
+
+    /* Стили для скроллбара */
+    .tableContent {
+        flex: 1;
+        overflow-y: auto;
+        max-height: calc(calc(718.2px * var(--k)) - calc(135px * var(--k)));
+    }
+
+    .tableRow {
+        padding: calc(10.35px * var(--k)) 0 calc(10.35px * var(--k)) 0;
+        margin: 0px calc(35.1px * var(--k)) calc(9.9px * var(--k)) calc(35.1px * var(--k));
+    }
+
+    .loading {
+        padding: calc(18px * var(--k));
+    }
+
+    .tableContent::-webkit-scrollbar {
+        width: calc(7.2px * var(--k));
+    }
+
+    .buttonsBelowTable {
+        margin-top: calc(26.1px * var(--k));
+    }
+
+    /*---------------- BUTTONS ---------------- */
+
+    button {
+        padding: calc(13.5px * var(--k)) calc(28.8px * var(--k)); /* Отступы */
+        font-size: calc(21.6px * var(--k)); /* Размер шрифта */
+        margin: calc(16.65px * var(--k)) 0 calc(16.65px * var(--k)) 0; /* Отступы вокруг кнопки */
+    }
+
+    .footerBlock {
+        margin-top: calc(127.8px * var(--k));
+        margin-left: calc(135px * var(--k));
+        margin-right: calc(135px * var(--k));
+        padding-bottom: calc(94.5px * var(--k));
+        height: calc(300px * var(--k));
+    }
+
+    /*---------------- TEXT ---------------- */
+
+    h1 {
+        font-size: calc(43.2px * var(--k));
+    }
+
+    h2 {
+        font-size: calc(36px * var(--k));
+        padding: calc(28.8px * var(--k)) 0px calc(28.8px * var(--k)) 0px;
+    }
+
+    p {
+        font-size: calc(22.5px * var(--k));
+    }
+
+}
+
+@media (max-width: 1050px) {
+
+    :root {
+        --k: 0.7;
+    }
+
+    .mainBlock {
+        max-width: calc(1260px*var(--k));
+        padding: 0 calc(18px*var(--k));
+        margin-top: calc(127.8px*var(--k));
+    }
+
+    .gridContainer {
+    row-gap: calc(78.3px*var(--k));
+    column-gap: calc(110.7px*var(--k));
+    }
+
+    .TebelID {
+        width: calc(420.3px*var(--k));
+        height: calc(54px*var(--k));
+        padding-left: calc(38.7px*var(--k));
+        margin-bottom: calc(33.3px*var(--k));
+        font-size: calc(21.6px*var(--k));
+    }
+
+    .switchLabel {
+        width: calc(420.3px*var(--k));
+        height: calc(54px*var(--k));
+    }
+
+    .switchOption {
+        font-size: calc(21.6px*var(--k));
+    }
+
+    .pictureConteiner {
+        width: calc(420.3px*var(--k));
+        height: calc(405px *var(--k));
+        margin: calc(33.3px *var(--k)) 0 calc(33.3px*var(--k)) 0;
+    }
+
+    .uploadContainer {
+        width: calc(420.3px *var(--k));
+        height: calc(345.6px*var(--k));
+    }
+
+    .sliderContainer {
+        width: calc(420.3px *var(--k));
+        height: calc(65.7px *var(--k));
+        padding-top: calc(16.65px *var(--k));
+        margin-bottom:calc(33.3px *var(--k));
+        font-size: calc(21.6px*var(--k));
+    }
+
+    .slider {
+        width: calc(420.3px *var(--k));
+        height: calc(4.5px *var(--k));
+    }
+
+    .slider::-webkit-slider-thumb {
+        width: calc( 8.1px *var(--k));
+        height: calc(35.5px *var(--k));
+    }
+
+    .sliderValue {
+        padding-top: calc(2.7px *var(--k));
+        padding-left: calc(24.3px *var(--k));
+    }
+
+    .instrumentsContainer {
+        width: calc(654.3px *var(--k)); 
+        height: calc(718.2px *var(--k));
+        font-size: calc(21.6px *var(--k));
+    }
+
+    .tableHeader {
+        height: calc(74.7px *var(--k));
+        padding-left: calc(45px * var(--k));
+    }
+
+    .tableHeader p {
+        font-size: calc(21.6px  * var(--k));
+    }
+
+    .tableColumnHeaders .instrumentCol{
+        height: calc(90px * var(--k));
+        padding-left: calc(76.5px * var(--k));
+    }
+
+    .tableColumnHeaders .findingCol {
+        height: calc(90px * var(--k));
+        padding-right: calc(35px * var(--k));
+    }
+
+
+    .instrumentCol {
+        width: calc(291.6px * var(--k));
+        padding-left: calc(41.4px * var(--k));
+    }
+
+    .findingCol {
+        width: calc(291.6px * var(--k));
+    }
+
+    .tableFooter {
+        padding: calc(21.6px * var(--k)) 0px calc(21.6px * var(--k)) calc(59.4px * var(--k));
+    }
+
+    .complianceText {
+        margin-left: calc(18px * var(--k));
+    }
+
+    .tableContent {
+        flex: 1;
+        overflow-y: auto;
+        max-height: calc(calc(718.2px * var(--k)) - calc(135px * var(--k)));
+    }
+
+    .tableRow {
+        padding: calc(10.35px * var(--k)) 0 calc(10.35px * var(--k)) 0;
+        margin: 0px calc(35.1px * var(--k)) calc(9.9px * var(--k)) calc(35.1px * var(--k));
+    }
+
+    .loading {
+        padding: calc(18px * var(--k));
+    }
+
+    .tableContent::-webkit-scrollbar {
+        width: calc(7.2px * var(--k));
+    }
+
+    .buttonsBelowTable {
+        margin-top: calc(26.1px * var(--k));
+    }
+
+    /*---------------- BUTTONS ---------------- */
+
+    button {
+        padding: calc(13.5px * var(--k)) calc(28.8px * var(--k)); /* Отступы */
+        font-size: calc(21.6px * var(--k)); /* Размер шрифта */
+        margin: calc(16.65px * var(--k)) 0 calc(16.65px * var(--k)) 0; /* Отступы вокруг кнопки */
+    }
+
+    .footerBlock {
+        margin-top: calc(127.8px * var(--k));
+        margin-left: calc(135px * var(--k));
+        margin-right: calc(135px * var(--k));
+        padding-bottom: calc(94.5px * var(--k));
+    }
+
+    /*---------------- TEXT ---------------- */
+
+    h1 {
+        font-size: calc(43.2px * var(--k));
+    }
+
+    h2 {
+        font-size: calc(36px * var(--k));
+        padding: calc(28.8px * var(--k)) 0px calc(28.8px * var(--k)) 0px;
+    }
+
+    p {
+        font-size: calc(22.5px * var(--k));
+    }
+
+}
+
+/* @media (max-width: 940px) {
+    .footerBlock {
+        height: 400px;
+    }
+} */
+
+@media (max-width: 900px) {
     .mainBlock {
         box-sizing: border-box;
         width: 90%;
@@ -550,18 +889,7 @@ p {
     }
 
     .footerBlock {
-        height: 350px;
-    }
-}
-
-@media (max-width: 940px) {
-    .footerBlock {
-        height: 400px;
-    }
-}
-
-@media (max-width: 700px) {
-    .footerBlock {
-        height: 500px;
+        height: 250px;
+        width: 80%;
     }
 }
