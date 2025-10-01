@@ -41,10 +41,16 @@ slider.addEventListener('input', () => {
 const uploadedImage = document.getElementById('uploadedImage');
 const downloadButton = document.getElementById('downloadButton');
 const uploadInput = document.getElementById('uploadInput');
+const cleanButton = document.getElementById('cleanButton');
 
 // Обработчик для кнопки "Загрузить"
 downloadButton.addEventListener('click', function() {
     uploadInput.click(); // Программно кликаем на скрытый input
+});
+
+// Обработчик для кнопки "Очистить"
+cleanButton.addEventListener('click', function() {
+    clearImage();
 });
 
 // Обработчик для выбора файла
@@ -65,6 +71,34 @@ function previewImage(event) {
     if (file) {
         reader.readAsDataURL(file);
     }
+}
+
+// Функция для очистки изображения
+function clearImage() {
+    const uploadedImage = document.getElementById('uploadedImage');
+    const uploadInput = document.getElementById('uploadInput');
+    
+    // Очищаем изображение
+    uploadedImage.src = '';
+    uploadedImage.style.display = 'none';
+    
+    // Очищаем input файла
+    uploadInput.value = '';
+    
+    // Очищаем сохраненные данные распознавания
+    localStorage.removeItem('last_recognition_data');
+    
+    // Очищаем таблицу
+    const tableContent = document.getElementById('tableContent');
+    tableContent.innerHTML = '<div class="loading">Введите табельный номер, загрузите изображение и нажмите "Проверить"</div>';
+    
+    // Сбрасываем статус соответствия
+    const complianceElement = document.querySelector('.tableFooter');
+    if (complianceElement) {
+        complianceElement.innerHTML = 'Соответствие:';
+    }
+    
+    console.log('Изображение и данные очищены');
 }
 
 
