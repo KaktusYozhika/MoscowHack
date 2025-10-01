@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Batch инференс для папки или zip с изображениями.
+Использует ту же модель Ultralytics YOLO, что и app.py.
+Позволяет настраивать параметры инференса через аргументы командной строки.
+"""
+
+import argparse, json, csv, zipfile, shutil
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from ultralytics import YOLO
+import cv2, time
+
+# === Загружаем модель один раз ===
+MODEL_PATH = Path("weights/best.pt")
+model = YOLO(str(MODEL_PATH))
+
+IMG_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+def process_image(img_path: Path, out_ann: Path, imgsz: int, conf: float, iou: float,
+                  agnostic_nms: bool, save_conf: bool):
+    """Прогоняет одно изображение через модель и сохраняет аннотированный файл."""
+    t0 = time.time()
+    results = model.predict(
+        str(img_path),
+        imgsz=imgsz,
+        conf=conf,
+        iou=iou,
+        agnostic_nms=agnostic_nms,
+        save_conf=save_conf,
+        save=False
+    )
+    r = results[0]
+    predictions = []
+    for box in r.boxes:
+        cls_id = int(box.cls[0])
+        conf_val = float(box.conf[0])
+        xyxy = box.xyxy[0].tolist()
+        predictions.append({
+            "class_id": cls_id,
+            "class_name": model.names[cls_id],
+            "confidence": round(conf_val, 3),
+            "bbox": [round(v, 2) for v in xyxy]
+        })
+
+    # Сохраняем картинку с разметкой
+    plotted = r.plot()
+    plotted_bgr = cv2.cvtColor(plotted, cv2.COLOR_RGB2BGR)
+    out_ann.parent.mkdir(parents=True, exist_ok=True)
+    cv2.imwrite(str(out_ann), plotted_bgr)
+
+    return predictions, int((time.time()-t0)*1000)
+
+def process_folder(input_dir: Path, out_dir: Path, make_zip: bool,
+                   imgsz: int, conf: float, iou: float,
+                   agnostic_nms: bool, save_conf: bool):
+    results = []
+    ann_dir = out_dir / "annotated"
+    ann_dir.mkdir(parents=True, exist_ok=True)
+
+    for img_path in sorted(input_dir.rglob("*")):
+        if img_path.suffix.lower() not in IMG_EXTS:
+            continue
+        preds, dt_ms = process_image(img_path, ann_dir / img_path.name,
+                                     imgsz, conf, iou, agnostic_nms, save_conf)
+        results.append({
+            "filename": str(img_path.relative_to(input_dir)),
+            "predictions": preds,
+            "processing_time_ms": dt_ms,
+            "annotated_path": str(Path("annotated")/img_path.name)
+        })
+
+    # JSON
+    with open(out_dir/"results.json","w",encoding="utf-8") as f:
+        json.dump(results,f,ensure_ascii=False,indent=2)
+
+    # CSV
+    with open(out_dir/"summary.csv","w",encoding="utf-8",newline="") as f:
+        w=csv.writer(f); w.writerow(["filename","n_predictions"])
+        for r in results: w.writerow([r["filename"],len(r["predictions"])])
+
+    # ZIP
+    if make_zip:
+        with zipfile.ZipFile(out_dir/"results.zip","w",zipfile.ZIP_DEFLATED) as z:
+            z.write(out_dir/"results.json","results.json")
+            z.write(out_dir/"summary.csv","summary.csv")
+            for p in ann_dir.iterdir():
+                z.write(p,arcname=f"annotated/{p.name}")
+
+    print(f"[OK] Processed {len(results)} images. Results in {out_dir}")
+
+def main():
+    ap = argparse.ArgumentParser(description="Batch inference for a folder or ZIP")
+    ap.add_argument("--input", required=True, help="Папка или .zip с изображениями")
+    ap.add_argument("--out", default="out_batch", help="Папка для результатов")
+    ap.add_argument("--no-zip", action="store_true", help="Не собирать архив results.zip")
+
+    # === параметры инференса ===
+    ap.add_argument("--imgsz", type=int, default=1280, help="Размер входного изображения")
+    ap.add_argument("--conf", type=float, default=0.25, help="Порог confidence")
+    ap.add_argument("--iou", type=float, default=0.45, help="Порог IoU для NMS")
+    ap.add_argument("--agnostic-nms", action="store_true", help="Агностический NMS")
+    ap.add_argument("--save-conf", action="store_true", help="Сохранять значения confidence в txt (для отладки)")
+
+    args = ap.parse_args()
+
+    src = Path(args.input); out = Path(args.out)
+    make_zip = not args.no_zip
+
+    if src.is_file() and src.suffix.lower()==".zip":
+        with TemporaryDirectory() as tmp:
+            tmpdir=Path(tmp)
+            with zipfile.ZipFile(src,"r") as z: z.extractall(tmpdir)
+            process_folder(tmpdir, out, make_zip,
+                           args.imgsz, args.conf, args.iou,
+                           args.agnostic_nms, args.save_conf)
+    elif src.is_dir():
+        process_folder(src, out, make_zip,
+                       args.imgsz, args.conf, args.iou,
+                       args.agnostic_nms, args.save_conf)
+    else:
+        raise SystemExit("Input должен быть папкой или .zip")
+
+if __name__=="__main__":
+    main()
