@@ -11,11 +11,41 @@ from datetime import datetime
 import uuid
 from pathlib import Path
 import requests
+import os
+import boto3
+from botocore.client import Config
+
+YC_ACCESS_KEY_ID = os.getenv("YC_ACCESS_KEY_ID")
+YC_SECRET_ACCESS_KEY = os.getenv("YC_SECRET_ACCESS_KEY")
+YC_BUCKET_NAME = os.getenv("YC_BUCKET_NAME")
+YC_STORAGE_ENDPOINT = os.getenv("YC_STORAGE_ENDPOINT", "https://storage.yandexcloud.net")
+
+
+def _s3_client():
+    return boto3.client(
+        "s3",
+        endpoint_url=YC_STORAGE_ENDPOINT,
+        aws_access_key_id=YC_ACCESS_KEY_ID,
+        aws_secret_access_key=YC_SECRET_ACCESS_KEY,
+        region_name="ru-central1",
+        config=Config(s3={"addressing_style": "virtual"})
+    )
+
+
+def _upload_to_s3(local_path: Path, key: str) -> str:
+    """Загрузить файл в Yandex Object Storage и вернуть presigned URL"""
+    s3 = _s3_client()
+    s3.upload_file(str(local_path), YC_BUCKET_NAME, key, ExtraArgs={"ContentType": "image/jpeg"})
+    return s3.generate_presigned_url(
+        "get_object",
+        Params={"Bucket": YC_BUCKET_NAME, "Key": key},
+        ExpiresIn=3600  # ссылка на 1 час
+    )
 
 
 # Настройки базы данных
-SQLALCHEMY_DATABASE_URL = "sqlite:///./tools.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./tools.db")
+engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
@@ -137,10 +167,18 @@ async def process_tools(
         db_model = ToolReturn
     
     # Создание записи в базе данных
+    if YC_BUCKET_NAME and YC_ACCESS_KEY_ID and YC_SECRET_ACCESS_KEY:
+        image_url = _upload_to_s3(file_path, filename)
+        image_path_value = image_url
+    else:
+        image_url = f"/uploads/{filename}"
+        image_path_value = str(file_path)
+
+    # Создание записи в базе данных
     db_record = db_model(
         TabelID=tabel_id,
-        image_path=str(file_path),
-        **recognized_tools  # Распаковать распознанные инструменты
+        image_path=image_path_value,
+        **recognized_tools
     )
     
     db.add(db_record)
@@ -152,7 +190,7 @@ async def process_tools(
         "message": f"Operation '{operation_type}' completed successfully",
         "order_id": db_record.IdOrder,
         "tabel_id": db_record.TabelID,
-        "image_url": f"/uploads/{filename}",
+        "image_url": image_url,
         "recognized_tools": recognized_tools,
         "image_base64": image_base64,
         "predictions_data": full_recognition_data.get("predictions", [])
