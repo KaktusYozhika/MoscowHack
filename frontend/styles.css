@@ -645,6 +645,10 @@ p {
         margin: calc(16.65px * var(--k)) 0 calc(16.65px * var(--k)) 0; /* Отступы вокруг кнопки */
     }
 
+    #downloadReportButton {
+        padding: calc(13.5px * var(--k)) calc(46.8px * var(--k));
+    }
+
     .footerBlock {
         margin-top: calc(127.8px * var(--k));
         margin-left: calc(135px * var(--k));
@@ -810,6 +814,10 @@ p {
         padding: calc(13.5px * var(--k)) calc(28.8px * var(--k)); /* Отступы */
         font-size: calc(21.6px * var(--k)); /* Размер шрифта */
         margin: calc(16.65px * var(--k)) 0 calc(16.65px * var(--k)) 0; /* Отступы вокруг кнопки */
+    }
+
+    #downloadReportButton {
+        padding: calc(13.5px * var(--k)) calc(46.8px * var(--k));
     }
 
     .footerBlock {
