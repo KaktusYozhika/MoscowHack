@@ -24,7 +24,7 @@ docker compose up --build
 ```bash
 git clone https://github.com/KaktusYozhika/MoscowHack
 cd MoscowHack
-python cv\process_batch.py --input "your_dataset_path" --out "your_output_path"
+python cv\process_batch --input "your_dataset_path" --out "your_output_path"
 ```
 Также можно задать параметры: **--conf**(уверенность модели), **--iou**(допускаемый процент пересечения боксов)
 После прогона файла по указанному пути **--out** сформируются json файл с разметкой и папка с размеченными картинками
