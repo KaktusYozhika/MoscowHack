@@ -1,9 +1,11 @@
 body {
     display: flex;
-    background-color: #C5D1E9;
+    /* background-color: #C5D1E9; */
     font-family: 'InterMedium';
     margin: 0px;
     flex-direction: column;
+
+    background: linear-gradient(to bottom left, #B4C3E7, #D6E0EB);
 }
 
 .mainBlock {
