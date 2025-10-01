@@ -5,7 +5,7 @@ body {
     margin: 0px;
     flex-direction: column;
 
-    background: linear-gradient(to bottom left, #B4C3E7, #D6E0EB);
+    background: linear-gradient(to bottom left, #99AEDE, #CDDAE3);
 }
 
 .mainBlock {
@@ -19,7 +19,7 @@ body {
     width: 90%;
     max-width: 1400px;
     padding: 0 20px;
-    margin: 142px auto auto auto;
+    margin: 70px auto auto auto;
 }
 
 .gridContainer {
@@ -464,7 +464,7 @@ p {
         box-sizing: border-box;
         width: 90%;
         padding: 0 20px;
-        margin: 82px auto auto auto;
+        margin: 70px auto auto auto;
     }
 
     .gridContainer {
@@ -513,7 +513,7 @@ p {
     .mainBlock {
         max-width: calc(1260px*var(--k));
         padding: 0 calc(18px*var(--k));
-        margin-top: calc(127.8px*var(--k));
+        margin-top: calc(63px*var(--k));
     }
 
     .gridContainer {
@@ -685,7 +685,7 @@ p {
     .mainBlock {
         max-width: calc(1260px*var(--k));
         padding: 0 calc(18px*var(--k));
-        margin-top: calc(127.8px*var(--k));
+        margin-top: calc(63px*var(--k));
     }
 
     .gridContainer {
@@ -857,7 +857,7 @@ p {
         box-sizing: border-box;
         width: 90%;
         padding: 0 20px;
-        margin: 82px auto auto auto;
+        margin: 30px auto auto auto;
     }
 
     .gridContainer {
