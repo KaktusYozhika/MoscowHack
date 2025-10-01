@@ -7,7 +7,7 @@
     window.API_BASE_URL = "http://localhost:8000";
   } else {
     // Если фронт открыт по внешнему IP или домену
-    window.API_BASE_URL = http://${hostname}:8000;
+    window.API_BASE_URL = `http://${hostname}:8000`;
   }
 })();
 
