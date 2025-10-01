@@ -6,6 +6,8 @@
 - Backend (FastAPI, работа с данными и API)
 - CV-сервис (YOLOv8 для распознавания изображений)
 
+Более подробное описание можно найти в папке **docs** со всеми документами и презентацией
+
 ## Быстрый старт
 ```bash
 git clone https://github.com/KaktusYozhika/MoscowHack
