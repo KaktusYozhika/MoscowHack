@@ -48,7 +48,7 @@ async def predict(file: UploadFile = File(...), conf: float = 0.25):
         predictions.append({
             "class_id": cls_id,
             "class_name": model.names[cls_id],
-            "confidence": f"{conf * 100:.2f}%%",
+            "confidence": round(conf, 3),
             "bbox": [round(v, 2) for v in xyxy]
         })
  
