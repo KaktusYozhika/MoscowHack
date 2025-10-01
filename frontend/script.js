@@ -390,6 +390,9 @@ function updateComplianceStatus(status) {
             if (status === 'Есть расхождения') {
                 complianceText.style.color = '#A20000';
             }
+            if (status === 'Полное') {
+                complianceText.style.color = '#1751A1';
+            }
         }
     }
 }
