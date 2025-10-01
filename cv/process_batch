@@ -13,7 +13,8 @@ from ultralytics import YOLO
 import cv2, time
 
 # === Загружаем модель один раз ===
-MODEL_PATH = Path("weights/best.pt")
+ROOT = Path(__file__).resolve().parent
+MODEL_PATH = Path("cv/weights/best.pt")
 model = YOLO(str(MODEL_PATH))
 
 IMG_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
