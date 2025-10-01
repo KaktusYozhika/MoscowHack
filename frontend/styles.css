@@ -1,9 +1,11 @@
 body {
     display: flex;
-    background-color: #C5D1E9;
+    /* background-color: #C5D1E9; */
     font-family: 'InterMedium';
     margin: 0px;
     flex-direction: column;
+
+    background: linear-gradient(to bottom left, #B4C3E7, #D6E0EB);
 }
 
 .mainBlock {
@@ -372,7 +374,7 @@ button {
     color: white;
     opacity: 0.7;
 }
-#insertButton {
+#cleanButton {
     background-color: #ffffff00;
     border: 1px solid #F1F4FA;
     color: white;
@@ -645,6 +647,10 @@ p {
         margin: calc(16.65px * var(--k)) 0 calc(16.65px * var(--k)) 0; /* Отступы вокруг кнопки */
     }
 
+    #downloadReportButton {
+        padding: calc(13.5px * var(--k)) calc(46.8px * var(--k));
+    }
+
     .footerBlock {
         margin-top: calc(127.8px * var(--k));
         margin-left: calc(135px * var(--k));
@@ -810,6 +816,10 @@ p {
         padding: calc(13.5px * var(--k)) calc(28.8px * var(--k)); /* Отступы */
         font-size: calc(21.6px * var(--k)); /* Размер шрифта */
         margin: calc(16.65px * var(--k)) 0 calc(16.65px * var(--k)) 0; /* Отступы вокруг кнопки */
+    }
+
+    #downloadReportButton {
+        padding: calc(13.5px * var(--k)) calc(46.8px * var(--k));
     }
 
     .footerBlock {
