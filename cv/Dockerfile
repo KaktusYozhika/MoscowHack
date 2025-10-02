@@ -7,6 +7,8 @@ COPY weights /app/weights
 
 RUN pip install fastapi uvicorn python-multipart
 
+RUN apt-get update && apt-get install -y fonts-dejavu-core
+
 
 EXPOSE 8000
 
